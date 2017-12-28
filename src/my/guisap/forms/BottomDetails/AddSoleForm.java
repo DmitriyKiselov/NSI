@@ -18,15 +18,25 @@ import my.guisap.utils.CreateFormUtils;
  */
 public class AddSoleForm extends EmptyForm {
 
-    DataPanel data = new DataPanel("LB_SOLE", "NAME", 1);
+    DataPanel data = new DataPanel("LB_SOLE", "ID", 1);
 
     JTextField field;
     BottomDetails parentForm;
+
+    String art = "";
 
     public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm) {
         super(caption, classFlag, needToSave, needSaveSize);
         this.parentForm = parentForm;
         createFormFields();
+    }
+
+    public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm, String art) {
+        super(caption, classFlag, needToSave, needSaveSize);
+        this.parentForm = parentForm;
+        createFormFields();
+        this.art = art;
+        fillFields();
     }
 
     public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, JTextField field) {
@@ -48,15 +58,18 @@ public class AddSoleForm extends EmptyForm {
         };
 
         String thirdMasElem[][] = {
-            {"Толщина подошвы в пучках", "true"}};
+            {"Толщина подошвы в пучках", "true"},
+            {"Ширина подошвы в пятке", "true"},
+            {"Длина следа", "true"}};
 
         data.addFields(firstMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
         data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY<'6'" + SqlOperations.GROUP_BY, true, 0);
         data.addFields(secondMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='6'" + SqlOperations.GROUP_BY, true, 0);
+        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='6' and PRIORITY<'15'" + SqlOperations.GROUP_BY, true, 0);
         data.addFields(thirdMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
+        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='15'" + SqlOperations.GROUP_BY, true, 0);
         data.setBorder(CreateFormUtils.defaultBorder);
-        data.setCheckFields(true, null);
+//        data.setCheckFields(true, null);
 
         pnlAttElem.add(data);
 
@@ -64,6 +77,10 @@ public class AddSoleForm extends EmptyForm {
 
         pack();
         setCenter();
+    }
+
+    private void fillFields() {
+        data.fillFields("SELECT * FROM LB_SOLE " + " where ART='" + art + "'", 1);
     }
 
     private void processing() {
@@ -90,11 +107,7 @@ public class AddSoleForm extends EmptyForm {
 
     @Override
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!data.checkID(0)) {
-            saveToDB();
-        } else {
-            JOptionPane.showMessageDialog(this, "Подошва с таким именем уже есть в базе", "Предупреждение", JOptionPane.WARNING_MESSAGE);
-        }
+        saveToDB();
     }
 
     private void saveToDB() {
