@@ -1,0 +1,10 @@
+#SAP to SQL
+#Thu Dec 28 15:46:28 EET 2017
+jco.client.lang=RU
+jco.destination.peak_limit=10
+jco.client.client=599
+jco.client.passwd=131313
+jco.client.user=TYSHEVICHDV
+jco.client.sysnr=00
+jco.destination.pool_capacity=3
+jco.client.ashost=192.168.2.227
