@@ -52,8 +52,8 @@ public class ImageUtils {
                 width = width / 2;
                 height = height / 2;
             } else if (lengthFile > 300) {
-                width = width / 5;
-                height = height / 5;
+                width = width / 7;
+                height = height / 7;
             }
 
             //перерисовка изображения под нужный размер

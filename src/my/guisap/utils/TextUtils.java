@@ -49,7 +49,7 @@ public class TextUtils {
                     }
                     break;
                     case "ZTFASON_SOLE": {
-                        if (!sql.checkInfo("select * from LB_SOLE where NAME='" + value + "'")) {
+                        if (!sql.checkInfo("select * from LB_SOLE where ART='" + value + "'")) {
                             result = true;
                         }
                     }

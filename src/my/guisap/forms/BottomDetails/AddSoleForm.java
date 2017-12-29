@@ -63,16 +63,15 @@ public class AddSoleForm extends EmptyForm {
             {"Длина следа", "true"}};
 
         data.addFields(firstMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY<'6'" + SqlOperations.GROUP_BY, true, 0);
+        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY<'7'" + SqlOperations.GROUP_BY, true, 0);
         data.addFields(secondMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='6' and PRIORITY<'15'" + SqlOperations.GROUP_BY, true, 0);
+        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='7' and PRIORITY<'15'" + SqlOperations.GROUP_BY, true, 0);
         data.addFields(thirdMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
         data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_SOLE' and MAIN_CLASS = 'LB_SOLE' and PRIORITY>='15'" + SqlOperations.GROUP_BY, true, 0);
         data.setBorder(CreateFormUtils.defaultBorder);
 //        data.setCheckFields(true, null);
 
         pnlAttElem.add(data);
-
         processing();
 
         pack();

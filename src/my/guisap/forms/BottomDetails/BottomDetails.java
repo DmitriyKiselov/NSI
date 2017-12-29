@@ -1,16 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.forms.BottomDetails;
 
 import baseclass.BInternalFrame;
 import com.ezware.oxbow.swingbits.table.filter.TableRowFilterSupport;
+import java.awt.Component;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
+import static javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN;
 import javax.swing.RowFilter;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
@@ -27,6 +28,10 @@ public class BottomDetails extends BInternalFrame {
     TableRowSorter<DefaultTableModel> sorterSole;
     TableRowSorter<DefaultTableModel> sorterHeel;
     TableRowSorter<DefaultTableModel> sorterInsole;
+
+    int indexSole = 2;
+    int indexHeel = 0;
+    int indexInSole = 0;
 
     public BottomDetails() {
         needSaveSize = true;
@@ -45,22 +50,31 @@ public class BottomDetails extends BInternalFrame {
     }
 
     public void fillTableSole() {
-        DefaultTableModel tmpModel = new DefaultTableModel();
-        sql.fillModel(SqlOperations.SOLE_FULL, tmpModel, 0);
+        DefaultTableModel tmpModel = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column == 0) {
+                    return ImageIcon.class;
+                }
+                return super.getColumnClass(column);
+            }
+        };
+        sql.tableFill(SqlOperations.SOLE_FULL_TABLE, tmpModel);
+
         jTable1.setModel(tmpModel);
         sorterSole = new TableRowSorter<>(tmpModel);
     }
 
     public void fillTableHeel() {
         DefaultTableModel tmpModel = new DefaultTableModel();
-        sql.fillModel(SqlOperations.HEEL_FULL, tmpModel, 0);
+        sql.tableFill(SqlOperations.HEEL_FULL, tmpModel);
         jTable2.setModel(tmpModel);
         sorterHeel = new TableRowSorter<>(tmpModel);
     }
 
     public void fillTableInSole() {
         DefaultTableModel tmpModel = new DefaultTableModel();
-        sql.fillModel(SqlOperations.INSOLE_FULL, tmpModel, 0);
+        sql.tableFill(SqlOperations.INSOLE_FULL, tmpModel);
         jTable3.setModel(tmpModel);
         sorterInsole = new TableRowSorter<>(tmpModel);
     }
@@ -77,13 +91,13 @@ public class BottomDetails extends BInternalFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane1 = new javax.swing.JScrollPane(jTable1,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jTable1 = TableRowFilterSupport
-        .forTable(new JTable() {
+        .forTable(new JTable(){
             @Override
             public boolean isCellEditable(int arg0, int arg1) {
                 return false;
-            }
+            };
         })
         .searchable(true)
         .actions(true)
@@ -146,10 +160,11 @@ public class BottomDetails extends BInternalFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
         jTable1.setAutoCreateRowSorter(true);
-        jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         jTable1.setCellSelectionEnabled(true);
         jTable1.setOpaque(false);
         jTable1.setUpdateSelectionOnSort(false);
+        jTable1.setRowHeight(180);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(140);
 
         jButton1.setText("Добавить");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -200,7 +215,7 @@ public class BottomDetails extends BInternalFrame {
             }
         });
 
-        jButton4.setText("jButton4");
+        jButton4.setText("Анализ фасона");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
@@ -471,17 +486,17 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        sql.SendQuery("DELETE FROM LB_SOLE WHERE ID='" + jTable1.getValueAt(jTable1.getSelectedRow(), 0) + "'");
+        sql.SendQuery("DELETE FROM LB_SOLE WHERE ART='" + jTable1.getValueAt(jTable1.getSelectedRow(), indexSole) + "'");
         fillTableSole();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        sql.SendQuery("DELETE FROM LB_HEEL WHERE ID='" + jTable2.getValueAt(jTable2.getSelectedRow(), 0) + "'");
+        sql.SendQuery("DELETE FROM LB_HEEL WHERE ID='" + jTable2.getValueAt(jTable2.getSelectedRow(), indexHeel) + "'");
         fillTableHeel();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        sql.SendQuery("DELETE FROM LB_BASIC_INSOLE WHERE ID='" + jTable3.getValueAt(jTable3.getSelectedRow(), 0) + "'");
+        sql.SendQuery("DELETE FROM LB_BASIC_INSOLE WHERE ID='" + jTable3.getValueAt(jTable3.getSelectedRow(), indexInSole) + "'");
         fillTableInSole();
     }//GEN-LAST:event_jButton10ActionPerformed
 
@@ -498,11 +513,11 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, this, jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexSole).toString()), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-         fr.openForm(new AnalysisBTForm("Подошва", "Sole", true, true, jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString(),"LB_SOLE"), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AnalysisBTForm("Выборка моделей на фасоне: " + jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString(), "Sole", true, true, jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString(), "LB_SOLE"), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

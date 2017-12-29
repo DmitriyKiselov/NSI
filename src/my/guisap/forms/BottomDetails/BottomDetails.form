@@ -98,6 +98,7 @@
           <SubComponents>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JScrollPane(jTable1,ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)"/>
                 <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
               </AuxValues>
 
@@ -118,8 +119,8 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);&#xa;jTable1.setCellSelectionEnabled(true);&#xa;jTable1.setOpaque(false);&#xa;jTable1.setUpdateSelectionOnSort(false);"/>
-                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="TableRowFilterSupport&#xa;.forTable(new JTable() {&#xa;    @Override&#xa;    public boolean isCellEditable(int arg0, int arg1) {&#xa;        return false;&#xa;    }&#xa;})&#xa;.searchable(true)&#xa;.actions(true)&#xa;.apply()"/>
+                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setCellSelectionEnabled(true);&#xa;jTable1.setOpaque(false);&#xa;jTable1.setUpdateSelectionOnSort(false);&#xa;jTable1.setRowHeight(180);&#xa;jTable1.getColumnModel().getColumn(0).setPreferredWidth(140);"/>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="TableRowFilterSupport&#xa;.forTable(new JTable(){&#xa;    @Override&#xa;    public boolean isCellEditable(int arg0, int arg1) {&#xa;        return false;&#xa;    };&#xa;})&#xa;.searchable(true)&#xa;.actions(true)&#xa;.apply()"/>
                   </AuxValues>
                 </Component>
               </SubComponents>
@@ -183,7 +184,7 @@
             </Component>
             <Component class="javax.swing.JButton" name="jButton4">
               <Properties>
-                <Property name="text" type="java.lang.String" value="jButton4"/>
+                <Property name="text" type="java.lang.String" value="&#x410;&#x43d;&#x430;&#x43b;&#x438;&#x437; &#x444;&#x430;&#x441;&#x43e;&#x43d;&#x430;"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>

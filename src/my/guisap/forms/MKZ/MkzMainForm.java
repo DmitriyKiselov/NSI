@@ -25,14 +25,13 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import my.guisap.forms.Calculation.CalculationMain;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
-import my.guisap.entity.ImageViewer;
+import my.guisap.componenst.MyImageCellRenderer;
 import my.guisap.forms.ImageForm;
 import my.guisap.forms.LifeLineForm;
 import my.guisap.forms.RejectForm;
@@ -165,20 +164,6 @@ public class MkzMainForm extends BInternalFrame {
 
         sorter = new TableRowSorter<>(OutTable);
 
-    }
-
-    public class MyImageCellRenderer extends DefaultTableCellRenderer {
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean isFocused, int row, int column) {
-            if (value instanceof ImageIcon) {
-                Image image = ((ImageIcon) value).getImage();
-                ImageViewer imageViewer = new ImageViewer(image);
-                return imageViewer;
-            }
-            return null;
-        }
     }
 
     @SuppressWarnings("unchecked")
