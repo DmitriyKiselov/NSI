@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import my.guisap.GuiStaticVariables;
 import my.guisap.MainClass;
-import my.guisap.forms.MKZ.MkzMainForm;
 
 /**
  *

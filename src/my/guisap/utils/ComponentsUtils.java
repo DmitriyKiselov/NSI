@@ -10,8 +10,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SpinnerModel;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.GuiStaticVariables;
 import my.guisap.sql.SqlOperations;
@@ -32,6 +34,14 @@ public class ComponentsUtils {
         JTextField resultField = new JTextField(text);
         createComponent(resultField, width, height, enabled);
         return resultField;
+    }
+
+    public static JSpinner createSpinner(String text, int width, int height, SpinnerModel model, boolean enabled) {
+        JSpinner resultSpinner = new JSpinner();
+        createComponent(resultSpinner, width, height, enabled);
+        resultSpinner.setModel(model);
+        resultSpinner.setEditor(new JSpinner.NumberEditor(resultSpinner, "#"));
+        return resultSpinner;
     }
 
     public static JLabel createLabel(String text) {
