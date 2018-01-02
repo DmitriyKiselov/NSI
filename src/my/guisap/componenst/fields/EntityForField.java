@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.componenst.fields;
 
 import javax.swing.JPanel;
@@ -13,22 +8,36 @@ import javax.swing.JPanel;
  */
 public class EntityForField extends JPanel {
 
-    private final String name;
+    private final String nameForm;
+    private final String nameField;
+    private final String discriptionField;
     private final String nameToSave;
     private final String nameCatalog;
     private final String info;
     private final boolean editable;
 
-    public EntityForField(String name, String nameToSave, String nameCatalog, String info, boolean editable) {
-        this.name = name;
+    private String infoForLimitation;
+
+    public EntityForField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
+        this.nameForm = nameForm;
+        this.nameField = nameField;
+        this.discriptionField = discriptionField;
         this.nameToSave = nameToSave;
         this.nameCatalog = nameCatalog;
         this.info = info;
         this.editable = editable;
     }
 
+    public String getNameForm() {
+        return nameForm;
+    }
+
     public String getNameField() {
-        return name;
+        return nameField;
+    }
+
+    public String getDiscriptionField() {
+        return discriptionField;
     }
 
     public String getNameToSave() {
@@ -46,4 +55,13 @@ public class EntityForField extends JPanel {
     public boolean isEditable() {
         return editable;
     }
+
+    public String getInfoForLimitation() {
+        return infoForLimitation;
+    }
+
+    public void setInfoForLimitation(String value) {
+        this.infoForLimitation = value;
+    }
+
 }

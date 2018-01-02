@@ -57,6 +57,7 @@ public class GuideForm extends javax.swing.JDialog {
 
     public GuideForm(boolean modal, attributeRow ar, String atbez, String atprt, String atinn, String atnam, String classFlag) {
         super(MainClass.mainWindow, modal);
+        System.out.println(atbez + " " + atprt + " " + atinn + " " + atnam + " ");
         setVariables(atprt, atinn, atnam, classFlag);
         this.attRow = ar;
         this.atbez = atbez;

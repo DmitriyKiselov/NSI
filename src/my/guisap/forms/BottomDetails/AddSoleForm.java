@@ -7,12 +7,8 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
-import my.guisap.attributeRow;
-import my.guisap.componenst.fields.CatalogField;
 import my.guisap.componenst.DataPanel;
 import my.guisap.componenst.EmptyForm;
-import my.guisap.componenst.fields.FreeWriteField;
-import my.guisap.componenst.fields.SpinnerField;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CreateFormUtils;
 
@@ -76,10 +72,6 @@ public class AddSoleForm extends EmptyForm {
 //        data.setCheckFields(true, null);
 
         pnlAttElem.add(data);
-        pnlAttElem.add(new attributeRow("Тест", "Тест", "Тест", "Тест", "Тест"));
-        pnlAttElem.add(new CatalogField("Тест", "Тест", "Test", "Test", true));
-        pnlAttElem.add(new FreeWriteField("Тест", "Тест", "Test", true));
-        pnlAttElem.add(new SpinnerField("Тест", "Тест", "Test", "year", true));
         processing();
 
         pack();

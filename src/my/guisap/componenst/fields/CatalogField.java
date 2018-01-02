@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import my.guisap.forms.CatalogForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.ImageUtils;
@@ -24,12 +25,12 @@ public class CatalogField extends EntityForField {
     private final JTextField textField;
     private final JButton buttonCatalog;
 
-    public CatalogField(String name, String nameToSave, String nameCatalog, String info, boolean editable) {
+    public CatalogField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
 
-        super(name, nameToSave, nameCatalog, info, editable);
+        super(nameForm, nameField, discriptionField, nameToSave, nameCatalog, info, editable);
 
-        nameField = ComponentsUtils.createLabel(name);
-        textField = ComponentsUtils.createField("", 200, 23, false);
+        this.nameField = ComponentsUtils.createLabel(nameField);
+        this.textField = ComponentsUtils.createField("", 200, 23, false);
 
         buttonCatalog = ComponentsUtils.createBtn("", 27, 23, editable);
         buttonCatalog.setIcon(ImageUtils.createIconForButton("/toolbarButtonGraphics/general/History16.gif"));
@@ -41,7 +42,7 @@ public class CatalogField extends EntityForField {
         });
 
         super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        super.add(nameField);
+        super.add(this.nameField);
         super.add(Box.createHorizontalGlue());
         super.add(textField);
         super.add(buttonCatalog);
@@ -71,7 +72,7 @@ public class CatalogField extends EntityForField {
     }
 
     private void callCatalog() {
-        System.out.println("my.guisap.componenst.CatalogField.callCatalog()");
+        CatalogForm catalogForm = new CatalogForm(true, this);
     }
 
 }

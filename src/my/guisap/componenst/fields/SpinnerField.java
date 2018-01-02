@@ -24,9 +24,9 @@ public class SpinnerField extends EntityForField {
     private final JSpinner textField;
     private SpinnerModel value = null;
 
-    public SpinnerField(String name, String nameToSave, String nameCatalog, String info, boolean editable) {
-        super(name, nameToSave, "", info, editable);
-        nameField = ComponentsUtils.createLabel(name);
+    public SpinnerField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
+        super(nameForm, nameField, nameToSave, discriptionField, "", info, editable);
+        this.nameField = ComponentsUtils.createLabel(nameField);
 
         switch (info) {
             case "year": {
@@ -39,7 +39,7 @@ public class SpinnerField extends EntityForField {
         textField = ComponentsUtils.createSpinner("", 227, 23, value, editable);
 
         super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        super.add(nameField);
+        super.add(this.nameField);
         super.add(Box.createHorizontalGlue());
         super.add(textField);
 

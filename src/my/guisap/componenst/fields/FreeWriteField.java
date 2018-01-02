@@ -15,14 +15,14 @@ public class FreeWriteField extends EntityForField {
     private final JLabel nameField;
     private final JTextField textField;
 
-    public FreeWriteField(String name, String nameToSave, String info, boolean editable) {
-        super(name, nameToSave, "", info, editable);
+    public FreeWriteField(String nameForm, String nameField, String discriptionField, String nameToSave, String info, boolean editable) {
+        super(nameForm, nameField, nameToSave, discriptionField, "", info, editable);
 
-        nameField = ComponentsUtils.createLabel(name);
-        textField = ComponentsUtils.createField("", 227, 23, editable);
+        this.nameField = ComponentsUtils.createLabel(nameField);
+        this.textField = ComponentsUtils.createField("", 227, 23, editable);
 
         super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        super.add(nameField);
+        super.add(this.nameField);
         super.add(Box.createHorizontalGlue());
         super.add(textField);
 

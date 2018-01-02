@@ -1,7 +1,6 @@
 package my.guisap.forms;
 
 import my.guisap.*;
-import my.guisap.forms.BlackList.BlackListDialog;
 import com.sun.glass.events.KeyEvent;
 import java.awt.Dimension;
 import java.awt.MouseInfo;
@@ -13,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
@@ -22,6 +20,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import my.guisap.componenst.JOverrideTable;
+import my.guisap.componenst.fields.CatalogField;
 import my.guisap.forms.BottomDetails.AddHeelForm;
 import my.guisap.forms.BottomDetails.AddInsoleForm;
 import my.guisap.forms.BottomDetails.AddSoleForm;
@@ -38,84 +37,62 @@ public class CatalogForm extends javax.swing.JDialog {
     FormRegister fr = FormRegister.getInstance();
     LogClass log = LogClass.getInstance();
     public static boolean selectValue = false;
-    boolean callFromPrepack = false, callFromRakurs = false, callPrepackCopyBut = false, callScalaLoader = false, callFromWeightReport = false, callFromBlackList = false;
-    int searchNum = 0;
-    JDialog dialog;
     SqlOperations sql = new SqlOperations();
     DefaultTableModel guideModelLocal = new DefaultTableModel(new Object[][]{}, new String[]{});
     DefaultTableModel guideModelSap = new DefaultTableModel(new Object[][]{}, new String[]{});
-    DefaultTableModel filtrGuideModel;
-    attributeRow attRow;
-    String atprt;
-    String atinn;
-    String atnam;
-    String classFlag;
+    CatalogField field;
     String atbez;
-    String buf;
     int typeSave = 1;
     TableRowSorter<DefaultTableModel> sorterLocal;
     TableRowSorter<DefaultTableModel> sorterSap;
 
-    public CatalogForm(boolean modal, attributeRow ar, String atbez, String atprt, String atinn, String atnam, String classFlag) {
+    public CatalogForm(boolean modal, CatalogField field) {
         super(MainClass.mainWindow, modal);
-        setVariables(atprt, atinn, atnam, classFlag);
-        this.attRow = ar;
-        this.atbez = atbez;
-        setTitle(atbez);
+        super.setTitle(field.getNameField());
+
+        this.field = field;
         setAlwaysOnTop(false);
         initComponents();
 
-        switch (atnam) {
+        switch (field.getDiscriptionField()) {
             case "SHIN_VIEW":
-                this.atnam = atnam;
                 setSearchKeyListner(false);
                 break;
             case "FASON_LAST":
-                this.atnam = atnam;
                 jButton3.setVisible(false);
                 setSearchKeyListner(true);
                 break;
             case "CODE_FASON_LAST":
-                this.atnam = atnam;
                 jButton3.setVisible(false);
                 setSearchKeyListner(true);
                 break;
             case "FASON_SOLE":
-                this.atnam = atnam;
                 jButton3.setText("Новый фасон");
                 typeSave = 2;
                 setSearchKeyListner(true);
                 break;
             case "FASON_HEEL":
-                this.atnam = atnam;
                 jButton3.setText("Новый фасон");
                 typeSave = 2;
                 setSearchKeyListner(true);
                 break;
             case "FASON_INSOLE":
-                this.atnam = atnam;
                 jButton3.setText("Новый фасон");
                 typeSave = 2;
                 setSearchKeyListner(true);
                 break;
             case "EXTRACT":
-                this.atnam = atnam;
                 jButton3.setText("Удалить экстракт");
                 jButton2.setText("Открыть");
                 typeSave = 3;
                 setSearchKeyListner(true);
                 break;
             default:
-                this.atnam = atnam;
                 setSearchKeyListner(false);
                 break;
         }
 
-        signsFormation(atprt, atinn, this.atnam, classFlag);
-
-        if (atnam.equals(GuiStaticVariables.MODEL_ATNAM)) {
-            jButton3.setVisible(false);
-        }
+        signsFormation(field.getNameCatalog(), field.getDiscriptionField());
 
         jTextField2.requestFocus();
         setVisible(true);
@@ -124,12 +101,14 @@ public class CatalogForm extends javax.swing.JDialog {
 
     }
 
-    private void signsFormation(String atprt, String atinn, String atnam, String classFlag) {
+    private void signsFormation(String atprt, String atnam) {
 
         jTable1.setModel(guideModelLocal);
         jTable1.getTableHeader().setReorderingAllowed(false);
+
         jTable2.setModel(guideModelSap);
         jTable2.getTableHeader().setReorderingAllowed(false);
+
         int rowCount = guideModelLocal.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             guideModelLocal.removeRow(0);
@@ -141,12 +120,8 @@ public class CatalogForm extends javax.swing.JDialog {
         }
 
         switch (atnam) {
-            case "MODEL":
-                sql.tableFill(SqlOperations.ARTICLE_MODEL_GUIDE + "'" + classFlag + "' order BY a.NAME ", guideModelLocal);
-                jTable1.removeColumn(jTable1.getColumnModel().getColumn(2));
-                break;
             case "SHIN_VIEW":
-                switch (attRow.infoForCheck) {
+                switch (field.getInfoForLimitation()) {
                     case "Мужской":
                         sql.tableFill("select * from SAPX_" + atprt + " a  WHERE CODE like '%мужские%' order BY a.CODE", guideModelLocal);
                         break;
@@ -160,43 +135,43 @@ public class CatalogForm extends javax.swing.JDialog {
 
             case "FASON_LAST":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
-                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
+                if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select INDEX_LAST,FASON_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
-                    sql.tableFill("select a.INDEX_LAST,a.FASON_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
+                    sql.tableFill("select a.INDEX_LAST,a.FASON_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation(), guideModelLocal);
                 }
                 break;
 
             case "CODE_FASON_LAST":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
-                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
+                if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select FASON_LAST,INDEX_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
-                    sql.tableFill("select a.FASON_LAST,a.INDEX_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
+                    sql.tableFill("select a.FASON_LAST,a.INDEX_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation(), guideModelLocal);
                 }
                 break;
 
             case "FASON_SOLE":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
-                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
+                if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select ID,ART from LB_SOLE order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
                     jButton3.setVisible(false);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_2 is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_3 is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_SOLE is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_SOLE_2 is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_SOLE_3 is not null", guideModelLocal, 0);
                 }
                 break;
 
             case "FASON_HEEL":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
-                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
+                if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select ID,NAME from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
                     jButton3.setVisible(false);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_2 is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_3 is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_HEEL is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_HEEL_2 is not null", guideModelLocal, 0);
+                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_HEEL_3 is not null", guideModelLocal, 0);
                 }
                 break;
 
@@ -211,9 +186,6 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
 
             default:
-                if (atprt.equals("CAWNT") || atprt.equals("")) {
-                    sql.tableFill(SqlOperations.GUIDE_CAWNT + " where a.CODE = '" + atinn + "' order by a.NAME", guideModelLocal);
-                }
                 if (atprt.equals("Z_PROVIDER")) {
                     String[] tmp = atnam.split("_");
                     if (tmp.length > 1) {
@@ -303,7 +275,7 @@ public class CatalogForm extends javax.swing.JDialog {
     }
 
     private void update() {
-        signsFormation(atprt, atinn, atnam, classFlag);
+        signsFormation(field.getNameCatalog(), field.getDiscriptionField());
         jTextField2.requestFocusInWindow();
         JOverrideTable.packColumns(jTable1);
     }
@@ -493,22 +465,9 @@ public class CatalogForm extends javax.swing.JDialog {
                     return;
                 }
             }
-            if (callScalaLoader) {
-                ScalaLoader.attrName = table.getValueAt(selRow, 1).toString();
-                ScalaLoader.attrCode = table.getValueAt(selRow, 0).toString();
-                selectValue = true;
-            } else if (callFromBlackList) {
-                BlackListDialog.attrValue = table.getValueAt(selRow, 1).toString();
-                selectValue = true;
-            } else {
 
-                attRow.setText(table.getValueAt(selRow, 0).toString(), table.getValueAt(selRow, 1).toString());
+            field.setText(table.getValueAt(selRow, 0).toString(), table.getValueAt(selRow, 1).toString());
 
-                if (atnam.equals(GuiStaticVariables.MODEL_ATNAM)) {
-                    attributeRowMainHeader mainHeader = (attributeRowMainHeader) attRow;
-                    mainHeader.idKey = Integer.parseInt(table.getModel().getValueAt(selRow, 2).toString());
-                }
-            }
             this.setVisible(false);
             this.dispose();
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -530,15 +489,15 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
             }
             case 2: {
-                switch (atnam) {
+                switch (field.getDiscriptionField()) {
                     case "FASON_SOLE":
-                        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_HEEL":
-                        fr.openForm(new AddHeelForm("Каблук", "Heel", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddHeelForm("Каблук", "Heel", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_INSOLE":
-                        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                 }
                 this.setVisible(false);
@@ -562,10 +521,10 @@ public class CatalogForm extends javax.swing.JDialog {
     }
 
     private void seveToLocalTable() {
-        BigDecimal nextID = (BigDecimal) sql.getObj("select NVL(max(TO_NUMBER(CODE)),0)+1 from SAPX_" + atprt);
+        BigDecimal nextID = (BigDecimal) sql.getObj("select NVL(max(TO_NUMBER(CODE)),0)+1 from " + field.getNameCatalog());
         if (nextID != null && !jTextField2.getText().equals("")) {
-            sql.SendQuery("insert into SAPX_" + atprt + " values('" + nextID + "','" + jTextField2.getText() + "')");
-            log.logWriting("Добавлены данные " + jTextField2.getText() + " в справочник SAPX_" + atprt);
+            sql.SendQuery("insert into " + field.getNameCatalog() + " values('" + nextID + "','" + jTextField2.getText() + "')");
+            log.logWriting("Добавлены данные " + jTextField2.getText() + " в справочник " + field.getNameCatalog());
         }
     }
 
@@ -598,13 +557,6 @@ public class CatalogForm extends javax.swing.JDialog {
         } catch (SQLException | UnknownHostException ex) {
             Logger.getLogger(SecurityManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    private void setVariables(String atprt, String atinn, String atnam, String classFlag) {
-        this.atprt = atprt;
-        this.atinn = atinn;
-        this.atnam = atnam;
-        this.classFlag = classFlag;
     }
 
     private void setLocation() {
