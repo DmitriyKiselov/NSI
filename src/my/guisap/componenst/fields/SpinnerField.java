@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
+import my.guisap.GuiStaticVariables;
 import my.guisap.utils.ComponentsUtils;
 
 /**
@@ -24,9 +25,10 @@ public class SpinnerField extends EntityForField {
     private final JSpinner textField;
     private SpinnerModel value = null;
 
-    public SpinnerField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
-        super(nameForm, nameField, nameToSave, discriptionField, "", info, editable);
-        this.nameField = ComponentsUtils.createLabel(nameField);
+    public SpinnerField(String nameForm, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
+        super(nameForm, "", nameField, nameToSave, discriptionField, position, block, editable, info);
+
+        this.nameField = ComponentsUtils.createLabel(discriptionField);
 
         switch (info) {
             case "year": {
@@ -36,11 +38,13 @@ public class SpinnerField extends EntityForField {
             break;
         }
 
-        textField = ComponentsUtils.createSpinner("", 227, 23, value, editable);
+        textField = ComponentsUtils.createSpinner("", 227, 23, value, isEditable());
+        setField(textField);
 
         super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         super.add(this.nameField);
         super.add(Box.createHorizontalGlue());
+        super.add(Box.createHorizontalStrut(GuiStaticVariables.TIGHTLE_STRUT));
         super.add(textField);
 
     }
@@ -51,5 +55,15 @@ public class SpinnerField extends EntityForField {
 
     public JSpinner getTextField() {
         return textField;
+    }
+
+    @Override
+    public void setEnabledComponent(boolean isEnabled) {
+        textField.setEnabled(false);
+    }
+
+    @Override
+    public void setText(String text) {
+        textField.setValue(text);
     }
 }

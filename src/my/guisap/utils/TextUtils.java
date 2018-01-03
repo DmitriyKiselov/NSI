@@ -134,6 +134,23 @@ public class TextUtils {
     }
 
     /**
+     * Проверка поля на пустоту
+     *
+     * @param field поле для проверки
+     * @param nameField имя поля
+     * @param listSkipFields пропускаемые поля
+     * @return true - поле пустое, false - значение присутствует
+     */
+    public static boolean checkTextField(JTextField field, String nameField, ArrayList<String> listSkipFields) {
+        field.setBorder(CreateFormUtils.defaultTextFieldBorder);
+        if ((field.getText().equals("") || field.getText().equals(" ")) && listSkipFields.indexOf(nameField) == -1) {
+            field.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Проверка поля на пустоту, с использованием счетчика
      *
      * @param field поле для проверки
@@ -152,6 +169,15 @@ public class TextUtils {
     public static boolean isRowExeption(List<String> listForCheck, attributeRow row) {
         for (String check : listForCheck) {
             if (row.lbl.getText().equals(check)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isRowExeption(List<String> listForCheck, String nameRow) {
+        for (String check : listForCheck) {
+            if (nameRow.equals(check)) {
                 return true;
             }
         }

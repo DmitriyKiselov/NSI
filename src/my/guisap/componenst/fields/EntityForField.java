@@ -1,31 +1,39 @@
 package my.guisap.componenst.fields;
 
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 /**
  *
  * @author Dima
  */
-public class EntityForField extends JPanel {
+public abstract class EntityForField extends JPanel {
 
     private final String nameForm;
     private final String nameField;
     private final String discriptionField;
     private final String nameToSave;
     private final String nameCatalog;
+    private final int position;
+    private final int block;
     private final String info;
     private final boolean editable;
 
+    private JComponent field;
+
     private String infoForLimitation;
 
-    public EntityForField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
+    public EntityForField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
         this.nameForm = nameForm;
-        this.nameField = nameField;
-        this.discriptionField = discriptionField;
-        this.nameToSave = nameToSave;
         this.nameCatalog = nameCatalog;
+        this.nameField = nameField;
+        this.nameToSave = nameToSave;
+        this.discriptionField = discriptionField;
+        this.position = Integer.valueOf(position);
+        this.block = Integer.valueOf(block);
+        this.editable = editable.equals("true");
         this.info = info;
-        this.editable = editable;
+
     }
 
     public String getNameForm() {
@@ -48,12 +56,20 @@ public class EntityForField extends JPanel {
         return nameCatalog;
     }
 
-    public String getInfo() {
-        return info;
+    public int getPosition() {
+        return position;
+    }
+
+    public int getBlock() {
+        return block;
     }
 
     public boolean isEditable() {
         return editable;
+    }
+
+    public String getInfo() {
+        return info;
     }
 
     public String getInfoForLimitation() {
@@ -63,5 +79,19 @@ public class EntityForField extends JPanel {
     public void setInfoForLimitation(String value) {
         this.infoForLimitation = value;
     }
+
+    public JComponent getField() {
+        return field;
+    }
+
+    public void setField(JComponent field) {
+        this.field = field;
+    }
+
+    abstract public String getText();
+
+    abstract public void setText(String text);
+
+    abstract public void setEnabledComponent(boolean isEnabled);
 
 }

@@ -2,16 +2,12 @@ package my.guisap.forms.BottomDetails;
 
 import baseclass.BInternalFrame;
 import com.ezware.oxbow.swingbits.table.filter.TableRowFilterSupport;
-import java.awt.Component;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JTable;
-import static javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
@@ -501,19 +497,19 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        fr.openForm(new AddHeelForm("Каблук", "Heel", true, true, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddHeelForm("Каблук", "Heel", true, false, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, true, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, false, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexSole).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexSole).toString()), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed

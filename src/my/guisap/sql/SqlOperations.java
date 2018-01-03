@@ -23,6 +23,7 @@ public class SqlOperations {
 
     public static final String BLOCK_SAVE_SCOPE = "SELECT SCOPE_IDENTITY() NewId";
     public static final String GUIDE = "select a.CODE, a.NAME from SAPX_";
+    public static final String SELECT_FOR_CATALOG_FORM = "select a.CODE, a.NAME from ";
     public static final String GUIDE_CAWNT = "select * from SAPX_CAWNT a ";
     public static final String BLOCK_ARTICLE_PR_DELETE = "DELETE FROM BLOCK_ARTICLE_PR WHERE RELIDKEY = ";
     public static final String MODEL_SIZE_DELETE = "DELETE FROM MODEL_SIZE WHERE RELIDKEY = ";
@@ -471,7 +472,7 @@ public class SqlOperations {
         try {
             rs = ps.executeQuery();
             while (rs.next()) {
-                str = rs.getString(1).toString();
+                str = rs.getString(1);
             }
         } catch (SQLException ex) {
             psStrFill_1(ps, count + 1);

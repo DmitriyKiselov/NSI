@@ -7,6 +7,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import my.guisap.GuiStaticVariables;
 import my.guisap.forms.CatalogForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.ComponentsUtils;
@@ -18,21 +19,21 @@ import my.guisap.utils.ImageUtils;
  */
 public class CatalogField extends EntityForField {
 
-    private String value;
     private String code;
 
     private final JLabel nameField;
     private final JTextField textField;
     private final JButton buttonCatalog;
 
-    public CatalogField(String nameForm, String nameField, String discriptionField, String nameToSave, String nameCatalog, String info, boolean editable) {
+    public CatalogField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
 
-        super(nameForm, nameField, discriptionField, nameToSave, nameCatalog, info, editable);
+        super(nameForm, nameCatalog, nameField, nameToSave, discriptionField, position, block, editable, info);
 
-        this.nameField = ComponentsUtils.createLabel(nameField);
+        this.nameField = ComponentsUtils.createLabel(discriptionField);
         this.textField = ComponentsUtils.createField("", 200, 23, false);
+        setField(textField);
 
-        buttonCatalog = ComponentsUtils.createBtn("", 27, 23, editable);
+        buttonCatalog = ComponentsUtils.createBtn("", 27, 23, isEditable());
         buttonCatalog.setIcon(ImageUtils.createIconForButton("/toolbarButtonGraphics/general/History16.gif"));
         buttonCatalog.addActionListener(new ActionListener() {
             @Override
@@ -44,18 +45,14 @@ public class CatalogField extends EntityForField {
         super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         super.add(this.nameField);
         super.add(Box.createHorizontalGlue());
+        super.add(Box.createHorizontalStrut(GuiStaticVariables.TIGHTLE_STRUT));
         super.add(textField);
         super.add(buttonCatalog);
     }
 
     public void setText(String code, String value) {
-        this.value = value;
-        this.code = code;
         textField.setText(value);
-    }
-
-    public String getText() {
-        return value;
+        this.code = code;
     }
 
     public JTextField getTextField() {
@@ -73,6 +70,22 @@ public class CatalogField extends EntityForField {
 
     private void callCatalog() {
         CatalogForm catalogForm = new CatalogForm(true, this);
+    }
+
+    @Override
+    public void setEnabledComponent(boolean isEnabled) {
+        textField.setEditable(false);
+        buttonCatalog.setEnabled(false);
+    }
+
+    @Override
+    public String getText() {
+        return textField.getText();
+    }
+
+    @Override
+    public void setText(String text) {
+        textField.setText(text);
     }
 
 }

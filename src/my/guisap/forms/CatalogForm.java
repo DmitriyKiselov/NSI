@@ -123,18 +123,18 @@ public class CatalogForm extends javax.swing.JDialog {
             case "SHIN_VIEW":
                 switch (field.getInfoForLimitation()) {
                     case "Мужской":
-                        sql.tableFill("select * from SAPX_" + atprt + " a  WHERE CODE like '%мужские%' order BY a.CODE", guideModelLocal);
+                        sql.tableFill("select * from " + atprt + " a  WHERE CODE like '%мужские%' order BY a.CODE", guideModelLocal);
                         break;
                     case "Женский":
-                        sql.tableFill("select * from SAPX_" + atprt + " a WHERE CODE like '%женские%'  order BY a.CODE", guideModelLocal);
+                        sql.tableFill("select * from " + atprt + " a WHERE CODE like '%женские%'  order BY a.CODE", guideModelLocal);
                         break;
                     default:
-                        sql.tableFill("select * from SAPX_" + atprt + " a order BY a.CODE", guideModelLocal);
+                        sql.tableFill("select * from " + atprt + " a order BY a.CODE", guideModelLocal);
                 }
                 break;
 
             case "FASON_LAST":
-                sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select INDEX_LAST,FASON_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
@@ -143,7 +143,7 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
 
             case "CODE_FASON_LAST":
-                sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select FASON_LAST,INDEX_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
@@ -152,7 +152,7 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
 
             case "FASON_SOLE":
-                sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select ID,ART from LB_SOLE order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
@@ -164,7 +164,7 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
 
             case "FASON_HEEL":
-                sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
                     sql.tableFill("select ID,NAME from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
@@ -177,7 +177,7 @@ public class CatalogForm extends javax.swing.JDialog {
 
             case "FASON_BASIC_INSOLE":
                 sql.tableFill("select ID,NAME from LB_BASIC_INSOLE order BY  lpad(ID, 50))", guideModelLocal);
-                sql.tableFill(" select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                sql.tableFill(" select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 break;
 
             case "EXTRACT":
@@ -189,18 +189,18 @@ public class CatalogForm extends javax.swing.JDialog {
                 if (atprt.equals("Z_PROVIDER")) {
                     String[] tmp = atnam.split("_");
                     if (tmp.length > 1) {
-                        sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + "_L a WHERE TYPE like '%" + tmp[1] + "%' order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);
+                        sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + "_L a WHERE TYPE like '%" + tmp[1] + "%' order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);
                     }
-                    sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                    sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 }
 
                 if (atprt.charAt(atprt.length() - 1) == 'L' && atprt.charAt(atprt.length() - 2) == '_') {
                     jButton3.setText("Добавить в локальный справочник");
                     typeSave = 4;
-                    sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);
+                    sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);
                 } else {
                     jTabbedPane1.setSelectedIndex(1);
-                    sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
+                    sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 }
 
                 break;
