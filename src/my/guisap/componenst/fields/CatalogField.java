@@ -25,9 +25,9 @@ public class CatalogField extends EntityForField {
     private final JTextField textField;
     private final JButton buttonCatalog;
 
-    public CatalogField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
+    public CatalogField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String checked, String info) {
 
-        super(nameForm, nameCatalog, nameField, nameToSave, discriptionField, position, block, editable, info);
+        super(nameForm, nameCatalog, nameField, nameToSave, discriptionField, position, block, editable, checked, info);
 
         this.nameField = ComponentsUtils.createLabel(discriptionField);
         this.textField = ComponentsUtils.createField("", 200, 23, false);
@@ -51,8 +51,8 @@ public class CatalogField extends EntityForField {
     }
 
     public void setText(String code, String value) {
-        textField.setText(value);
         this.code = code;
+        textField.setText(value);
     }
 
     public JTextField getTextField() {

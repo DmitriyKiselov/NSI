@@ -62,7 +62,16 @@ public class AnalysisBTForm extends EmptyForm {
                     return super.getColumnClass(column);
                 }
             };
-            sql.tableFill("SELECT '' \"Фото модели\",MODEL \"Модель\" from MKZ_LIST_HEAD where FASON_SOLE='" + tmp.getValueAt(i, 0).toString() + "'", models);
+
+            switch (table) {
+                case "LB_SOLE":
+                    sql.tableFill("SELECT '' \"Фото модели\",MODEL \"Модель\" from MKZ_LIST_HEAD where FASON_SOLE='" + tmp.getValueAt(i, 0).toString() + "'", models);
+                    break;
+                case "LB_HEEL":
+                    sql.tableFill("SELECT '' \"Фото модели\",MODEL \"Модель\" from MKZ_LIST_HEAD where FASON_HEEL='" + tmp.getValueAt(i, 0).toString() + "'", models);
+                    break;
+            }
+
             if (models.getRowCount() > 0) {
 
                 JTable tmpTable = new JTable() {

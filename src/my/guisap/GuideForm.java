@@ -217,7 +217,7 @@ public class GuideForm extends javax.swing.JDialog {
             case "FASON_HEEL":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
-                    sql.tableFill("select ID,NAME from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
+                    sql.tableFill("select ID,ART from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
                     jButton3.setVisible(false);
                     sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL is not null", guideModelLocal, 0);

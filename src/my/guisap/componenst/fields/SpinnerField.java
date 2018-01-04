@@ -25,8 +25,8 @@ public class SpinnerField extends EntityForField {
     private final JSpinner textField;
     private SpinnerModel value = null;
 
-    public SpinnerField(String nameForm, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
-        super(nameForm, "", nameField, nameToSave, discriptionField, position, block, editable, info);
+    public SpinnerField(String nameForm, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String checked, String info) {
+        super(nameForm, "", nameField, nameToSave, discriptionField, position, block, editable, checked, info);
 
         this.nameField = ComponentsUtils.createLabel(discriptionField);
 
@@ -49,6 +49,7 @@ public class SpinnerField extends EntityForField {
 
     }
 
+    @Override
     public String getText() {
         return textField.getValue().toString();
     }
@@ -64,6 +65,6 @@ public class SpinnerField extends EntityForField {
 
     @Override
     public void setText(String text) {
-        textField.setValue(text);
+        textField.setValue(Integer.valueOf(text));
     }
 }

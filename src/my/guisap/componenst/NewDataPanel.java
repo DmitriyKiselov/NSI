@@ -6,6 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.fields.CatalogField;
@@ -66,7 +67,8 @@ public class NewDataPanel extends JPanel {
                             (String) fields.getValueAt(i, 7),
                             (String) fields.getValueAt(i, 8),
                             (String) fields.getValueAt(i, 9),
-                            (String) fields.getValueAt(i, 10)));
+                            (String) fields.getValueAt(i, 10),
+                            (String) fields.getValueAt(i, 11)));
                 }
                 break;
                 case "FreeWriteField": {
@@ -77,7 +79,8 @@ public class NewDataPanel extends JPanel {
                             (String) fields.getValueAt(i, 7),
                             (String) fields.getValueAt(i, 8),
                             (String) fields.getValueAt(i, 9),
-                            (String) fields.getValueAt(i, 10)));
+                            (String) fields.getValueAt(i, 10),
+                            (String) fields.getValueAt(i, 11)));
                 }
                 break;
                 case "SpinnerField": {
@@ -88,7 +91,8 @@ public class NewDataPanel extends JPanel {
                             (String) fields.getValueAt(i, 7),
                             (String) fields.getValueAt(i, 8),
                             (String) fields.getValueAt(i, 9),
-                            (String) fields.getValueAt(i, 10)));
+                            (String) fields.getValueAt(i, 10),
+                            (String) fields.getValueAt(i, 11)));
                 }
                 break;
             }
@@ -137,12 +141,30 @@ public class NewDataPanel extends JPanel {
         return listFields.get(id);
     }
 
-    public JComponent getTextField(int id) {
-        return listFields.get(id).getField();
+    public JTextField getTextField(int id) {
+        if (listFields.get(id).getField() instanceof JTextField) {
+            return (JTextField) listFields.get(id).getField();
+        }
+        return null;
+    }
+
+    public JSpinner getSpinnerField(int id) {
+        if (listFields.get(id).getField() instanceof JSpinner) {
+            return (JSpinner) listFields.get(id).getField();
+        }
+        return null;
     }
 
     public String getText(int id) {
         return listFields.get(id).getText();
+    }
+
+    public String getCode(int id) {
+        if (listFields.get(id) instanceof CatalogField) {
+            CatalogField tmp = (CatalogField) listFields.get(id);
+            return tmp.getCode();
+        }
+        return "";
     }
 
     public void setText(int id, String text) {
@@ -214,7 +236,7 @@ public class NewDataPanel extends JPanel {
             return false;
         } else {
             for (int i = 0; i < listFields.size(); i++) {
-                listFields.get(i).setText((String) query.getValueAt(0, startValue++));
+                setText(i, (String) query.getValueAt(0, startValue++));
             }
             return true;
         }

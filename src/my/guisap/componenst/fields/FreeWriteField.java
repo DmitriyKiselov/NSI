@@ -16,8 +16,8 @@ public class FreeWriteField extends EntityForField {
     private final JLabel nameField;
     private final JTextField textField;
 
-    public FreeWriteField(String nameForm, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
-        super(nameForm, "", nameField, nameToSave, discriptionField, position, block, editable, info);
+    public FreeWriteField(String nameForm, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String checked, String info) {
+        super(nameForm, "", nameField, nameToSave, discriptionField, position, block, editable, checked, info);
 
         this.nameField = ComponentsUtils.createLabel(discriptionField);
         this.textField = ComponentsUtils.createField("", 227, 23, isEditable());

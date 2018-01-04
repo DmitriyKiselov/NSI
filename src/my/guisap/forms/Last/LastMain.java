@@ -31,9 +31,8 @@ import my.guisap.utils.LifeLineUtils;
  */
 public class LastMain extends BInternalFrame {
 
-    /**
-     * Creates new form LastMain
-     */
+    int indexColumn = 2;
+
     ColorRend colRend = new ColorRend();
     JPopupMenu popupmenuTbl2 = new JPopupMenu();
     JPopupMenu popupmenuTbl1 = new JPopupMenu();
@@ -50,7 +49,7 @@ public class LastMain extends BInternalFrame {
     //функция для заполнения таблицы
     public void FillMainTable() {
         DefaultTableModel lastTable = new DefaultTableModel();
-        String query = SqlOperations.LAST_LIST + SqlOperations.LAST_ORDER_BY;
+        String query = SqlOperations.LAST_LIST_TABLE + SqlOperations.LAST_ORDER_BY;
 
         if (jCheckBox2.isSelected()) {
             query = "select a.* from (" + query
@@ -347,7 +346,7 @@ public class LastMain extends BInternalFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), 2).toString();
+            String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString();
             fr.openForm(new LastEdit("Колодка ", GuiStaticVariables.LAST, this, indexLast, true), FormRegister.ONE_KEY_FORM);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(this, "Выберите колодку для редактирования", "Ошибка", JOptionPane.WARNING_MESSAGE);
@@ -362,7 +361,7 @@ public class LastMain extends BInternalFrame {
         if (evt.getClickCount() == 2) {
             switch (jTable2.getSelectedColumn()) {
                 case 11:
-                    fr.openForm(new LifeLineForm(LifeLineUtils.LAST_LIFE_LINE, jTable2.getValueAt(jTable2.getSelectedRow(), 2).toString()), FormRegister.SOME_KEY_FORM);
+                    fr.openForm(new LifeLineForm(LifeLineUtils.LAST_LIFE_LINE, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
                     break;
                 default:
                     jButton1ActionPerformed(null);
@@ -421,7 +420,7 @@ public class LastMain extends BInternalFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-            String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString();
+            String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString();
             fr.openForm(new LastEdit("Колодка ", GuiStaticVariables.LAST, this, indexLast, false), FormRegister.ONE_KEY_FORM);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(this, "Выберите колодку на основе которой создать новую", "Ошибка", JOptionPane.WARNING_MESSAGE);
@@ -474,8 +473,8 @@ public class LastMain extends BInternalFrame {
         opListModel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fr.openForm(new SimpleTableForm("Модели на основе колодки: " + jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString(),
-                        SqlOperations.MKZ_LIST + " where CODE_LAST='" + jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString() + "'"), FormRegister.SOME_KEY_FORM);
+                fr.openForm(new SimpleTableForm("Модели на основе колодки: " + jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString(),
+                        SqlOperations.MKZ_LIST + " where CODE_LAST='" + jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString() + "'"), FormRegister.SOME_KEY_FORM);
             }
         });
 
@@ -483,7 +482,7 @@ public class LastMain extends BInternalFrame {
         opLifeLineLast.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fr.openForm(new LifeLineForm(LifeLineUtils.LAST_LIFE_LINE, jTable2.getValueAt(jTable2.getSelectedRow(), 0).toString()), FormRegister.SOME_KEY_FORM);
+                fr.openForm(new LifeLineForm(LifeLineUtils.LAST_LIFE_LINE, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
             }
         });
 
@@ -518,7 +517,7 @@ public class LastMain extends BInternalFrame {
         opLifeLineMKZ.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                fr.openForm(new LifeLineForm(LifeLineUtils.MKZ_LIFE_LINE, jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()), FormRegister.SOME_KEY_FORM);
+                fr.openForm(new LifeLineForm(LifeLineUtils.MKZ_LIFE_LINE, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
             }
         });
         JMenuItem updateRequest = new JMenuItem("Обновить");

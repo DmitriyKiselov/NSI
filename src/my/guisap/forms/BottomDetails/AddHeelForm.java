@@ -5,14 +5,15 @@
  */
 package my.guisap.forms.BottomDetails;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import my.guisap.componenst.DataPanel;
+import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.EmptyForm;
-import my.guisap.sql.SqlOperations;
-import my.guisap.utils.CreateFormUtils;
+import my.guisap.componenst.NewDataPanel;
 import my.guisap.utils.SecurityManager;
 
 /**
@@ -21,15 +22,26 @@ import my.guisap.utils.SecurityManager;
  */
 public class AddHeelForm extends EmptyForm {
 
-    DataPanel data = new DataPanel("LB_HEEL", "NAME", 1);
+    NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
+//    DataPanel data = new DataPanel("LB_HEEL", "NAME", 1);
 
     JTextField field;
     BottomDetails parentForm;
+
+    String art = "";
 
     public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm) {
         super(caption, classFlag, needToSave, needSaveSize);
         this.parentForm = parentForm;
         createFormFields();
+    }
+
+    public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm, String art) {
+        super(caption, classFlag, needToSave, needSaveSize);
+        this.parentForm = parentForm;
+        createFormFields();
+        this.art = art;
+        fillFields();
     }
 
     public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, JTextField field) {
@@ -39,43 +51,43 @@ public class AddHeelForm extends EmptyForm {
     }
 
     private void createFormFields() {
-        String firstMasElem[][] = {
-            {"Название фасона", "true"},
-            {"Название артикула", "true"}};
-        String secondMasElem[][] = {
-            {"Высота каблука", "true"}};
-
-        data.addFields(firstMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'LB_HEEL' and MAIN_CLASS = 'LB_HEEL'" + SqlOperations.GROUP_BY, true, 0);
-        data.addFields(secondMasElem, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.setBorder(CreateFormUtils.defaultBorder);
-        data.setCheckFields(true, null);
-
         pnlAttElem.add(data);
-
         processing();
-
         pack();
         setCenter();
     }
 
+    private void fillFields() {
+        data.fillFields("SELECT * FROM LB_HEEL " + " where ART='" + art + "'", 1);
+    }
+
     private void processing() {
-        data.getTextField(0).addCaretListener(new CaretListener() {
+        JTextField tmpField = (JTextField) data.getTextField(0);
+        tmpField.addCaretListener(new CaretListener() {
             @Override
             public void caretUpdate(CaretEvent ce) {
-                data.getTextField(1).setText(data.getTextField(0).getText() + "/");
+                data.setText(1, data.getText(0) + "/");
             }
         });
-        data.getTextField(1).setEditable(false);
+        tmpField.setEnabled(true);
+
+        data.getTextField(0).addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent fe) {
+            }
+
+            @Override
+            public void focusLost(FocusEvent fe) {
+                DefaultTableModel tmp = new DefaultTableModel();
+                sql.tableFill("select count(name)+1 from LB_HEEL where name ='" + data.getText(0) + "'", tmp);
+                data.setText(1, data.getText(0) + "/" + tmp.getValueAt(0, 0));
+            }
+        });
     }
 
     @Override
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
-        if (!data.checkID(0)) {
-            saveToDB();
-        } else {
-            JOptionPane.showMessageDialog(this, "Каблук с таким именем уже есть в базе", "Предупреждение", JOptionPane.WARNING_MESSAGE);
-        }
+        saveToDB();
     }
 
     private void saveToDB() {
@@ -91,7 +103,7 @@ public class AddHeelForm extends EmptyForm {
             if (parentForm != null) {
                 parentForm.fillTableHeel();
             } else if (field != null) {
-                field.setText(data.getTextField(0).getText());
+                field.setText(data.getText(0));
             }
             this.closeWindow();
         } else {

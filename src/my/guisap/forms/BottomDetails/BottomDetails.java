@@ -25,9 +25,7 @@ public class BottomDetails extends BInternalFrame {
     TableRowSorter<DefaultTableModel> sorterHeel;
     TableRowSorter<DefaultTableModel> sorterInsole;
 
-    int indexSole = 2;
-    int indexHeel = 0;
-    int indexInSole = 0;
+    int indexColumn = 2;
 
     public BottomDetails() {
         needSaveSize = true;
@@ -62,8 +60,16 @@ public class BottomDetails extends BInternalFrame {
     }
 
     public void fillTableHeel() {
-        DefaultTableModel tmpModel = new DefaultTableModel();
-        sql.tableFill(SqlOperations.HEEL_FULL, tmpModel);
+        DefaultTableModel tmpModel = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column == 0) {
+                    return ImageIcon.class;
+                }
+                return super.getColumnClass(column);
+            }
+        };
+        sql.tableFill(SqlOperations.HEEL_FULL_TABLE, tmpModel);
         jTable2.setModel(tmpModel);
         sorterHeel = new TableRowSorter<>(tmpModel);
     }
@@ -122,6 +128,8 @@ public class BottomDetails extends BInternalFrame {
         jTextField3 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jButton16 = ComponentsUtils.createBtn("",25,25,true);
+        jButton5 = ComponentsUtils.createBtn("Анализ фасона",200,25,true);
+        jButton6 = ComponentsUtils.createBtn("Добавить на основе",240,25,true);
         jPanel3 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable3 = TableRowFilterSupport
@@ -320,6 +328,20 @@ public class BottomDetails extends BInternalFrame {
             }
         });
 
+        jButton5.setText("Анализ фасона");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jButton6.setText("Добавить на основе");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -334,7 +356,11 @@ public class BottomDetails extends BInternalFrame {
                 .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton9)
+                .addGap(45, 45, 45)
+                .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton7)
                 .addContainerGap())
         );
@@ -347,10 +373,13 @@ public class BottomDetails extends BInternalFrame {
                         .addComponent(jButton7)
                         .addComponent(jButton9)
                         .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3))
+                        .addComponent(jLabel3)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton6)
+                            .addComponent(jButton5)))
                     .addComponent(jButton16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Каблук", jPanel2);
@@ -482,17 +511,17 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton15ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        sql.SendQuery("DELETE FROM LB_SOLE WHERE ART='" + jTable1.getValueAt(jTable1.getSelectedRow(), indexSole) + "'");
+        sql.SendQuery("DELETE FROM LB_SOLE WHERE ART='" + jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn) + "'");
         fillTableSole();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        sql.SendQuery("DELETE FROM LB_HEEL WHERE ID='" + jTable2.getValueAt(jTable2.getSelectedRow(), indexHeel) + "'");
+        sql.SendQuery("DELETE FROM LB_HEEL WHERE ID='" + jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn) + "'");
         fillTableHeel();
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        sql.SendQuery("DELETE FROM LB_BASIC_INSOLE WHERE ID='" + jTable3.getValueAt(jTable3.getSelectedRow(), indexInSole) + "'");
+        sql.SendQuery("DELETE FROM LB_BASIC_INSOLE WHERE ID='" + jTable3.getValueAt(jTable3.getSelectedRow(), indexColumn) + "'");
         fillTableInSole();
     }//GEN-LAST:event_jButton10ActionPerformed
 
@@ -509,12 +538,20 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexSole).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         fr.openForm(new AnalysisBTForm("Выборка моделей на фасоне: " + jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString(), "Sole", true, true, jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString(), "LB_SOLE"), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        fr.openForm(new AnalysisBTForm("Выборка моделей на фасоне: " + jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString(), "Heel", true, true, jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString(), "LB_HEEL"), FormRegister.SOME_KEY_FORM);
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        fr.openForm(new AddHeelForm("Каблук", "Heel", true, false, this, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -526,6 +563,8 @@ public class BottomDetails extends BInternalFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;

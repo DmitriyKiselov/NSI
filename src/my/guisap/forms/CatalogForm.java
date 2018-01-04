@@ -166,7 +166,7 @@ public class CatalogForm extends javax.swing.JDialog {
             case "FASON_HEEL":
                 sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 if (field.getInfoForLimitation().equals("") || field.getInfoForLimitation().equals(" ")) {
-                    sql.tableFill("select ID,NAME from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
+                    sql.tableFill("select ID,ART from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
                     jButton3.setVisible(false);
                     sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + field.getInfoForLimitation() + " and FASON_HEEL is not null", guideModelLocal, 0);
@@ -186,15 +186,15 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
 
             default:
-                if (atprt.equals("Z_PROVIDER")) {
+                if (atprt.equals("SAPX_Z_PROVIDER")) {
                     String[] tmp = atnam.split("_");
                     if (tmp.length > 1) {
                         sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + "_L a WHERE TYPE like '%" + tmp[1] + "%' order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);
                     }
                     sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 }
-
-                if (atprt.charAt(atprt.length() - 1) == 'L' && atprt.charAt(atprt.length() - 2) == '_') {
+                
+                if ((atprt.charAt(atprt.length() - 1) == 'L' && atprt.charAt(atprt.length() - 2) == '_') || (atprt.contains("LOCAL_"))) {
                     jButton3.setText("Добавить в локальный справочник");
                     typeSave = 4;
                     sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelLocal);

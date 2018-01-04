@@ -17,13 +17,14 @@ public abstract class EntityForField extends JPanel {
     private final int position;
     private final int block;
     private final String info;
-    private final boolean editable;
+    private boolean editable;
+    private boolean checked;
 
     private JComponent field;
 
     private String infoForLimitation;
 
-    public EntityForField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String info) {
+    public EntityForField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String checked, String info) {
         this.nameForm = nameForm;
         this.nameCatalog = nameCatalog;
         this.nameField = nameField;
@@ -32,6 +33,7 @@ public abstract class EntityForField extends JPanel {
         this.position = Integer.valueOf(position);
         this.block = Integer.valueOf(block);
         this.editable = editable.equals("true");
+        this.checked = checked.equals("true");
         this.info = info;
 
     }
@@ -66,6 +68,18 @@ public abstract class EntityForField extends JPanel {
 
     public boolean isEditable() {
         return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public String getInfo() {
