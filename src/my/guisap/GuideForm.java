@@ -189,7 +189,7 @@ public class GuideForm extends javax.swing.JDialog {
                 if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
                     sql.tableFill("select INDEX_LAST,FASON_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
-                    sql.tableFill("select a.INDEX_LAST,a.FASON_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
+//                    sql.tableFill("select a.INDEX_LAST,a.FASON_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
                 }
                 break;
 
@@ -198,7 +198,7 @@ public class GuideForm extends javax.swing.JDialog {
                 if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
                     sql.tableFill("select FASON_LAST,INDEX_LAST from LAST_HEAD order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
-                    sql.tableFill("select a.FASON_LAST,a.INDEX_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
+//                    sql.tableFill("select a.FASON_LAST,a.INDEX_LAST from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck, guideModelLocal);
                 }
                 break;
 
@@ -207,23 +207,23 @@ public class GuideForm extends javax.swing.JDialog {
                 if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
                     sql.tableFill("select ID,ART from LB_SOLE order BY  lpad(ID, 50)", guideModelLocal);
                 } else {
-                    jButton3.setVisible(false);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_2 is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_3 is not null", guideModelLocal, 0);
+//                    jButton3.setVisible(false);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE is not null", guideModelLocal, 0);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_2 is not null", guideModelLocal, 0);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_SOLE_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_SOLE_3 is not null", guideModelLocal, 0);
                 }
                 break;
 
             case "FASON_HEEL":
                 sql.tableFill("select * from (" + SqlOperations.GUIDE + atprt + " a order BY a.CODE) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
-                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
-                    sql.tableFill("select ID,ART from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
-                } else {
-                    jButton3.setVisible(false);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_2 is not null", guideModelLocal, 0);
-                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_3 is not null", guideModelLocal, 0);
-                }
+//                if (attRow.infoForCheck.equals("") || attRow.infoForCheck.equals(" ")) {
+//                    sql.tableFill("select ID,ART from LB_HEEL order BY  lpad(ID, 50)", guideModelLocal);
+//                } else {
+//                    jButton3.setVisible(false);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last left join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL is not null", guideModelLocal, 0);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_2 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_2 is not null", guideModelLocal, 0);
+//                    sql.fillModel("select a.INDEX_LAST,FASON_HEEL_3 from LAST_HEAD a left join LAST_INFO b on a.Index_Last = b.index_last inner join LAST_INFO_EXTRA c on a.Index_Last = c.index_last WHERE " + attRow.infoForCheck + " and FASON_HEEL_3 is not null", guideModelLocal, 0);
+//                }
                 break;
 
             case "FASON_BASIC_INSOLE":

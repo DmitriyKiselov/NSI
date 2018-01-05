@@ -47,7 +47,7 @@ public class GuiStaticVariables {
     /**
      * Версия приложения
      */
-    public static String VERSIONAPP = "2.0(040118-1)";
+    public static String VERSIONAPP = "2.0(050118-0)";
     public static String ACTUALVERSIONAPP = "";
     public static Font globalFont = new Font("Arial", 0, 12);
 

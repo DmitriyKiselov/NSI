@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -15,6 +14,7 @@ import my.guisap.componenst.fields.FreeWriteField;
 import my.guisap.componenst.fields.SpinnerField;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CreateFormUtils;
+import my.guisap.utils.LogClass;
 import my.guisap.utils.TextUtils;
 
 /**
@@ -22,6 +22,8 @@ import my.guisap.utils.TextUtils;
  * @author Dima
  */
 public class NewDataPanel extends JPanel {
+
+    LogClass log = LogClass.getInstance();
 
     final int nameFieldInJPanel = 0;
     final int textFieldInJPanel = 3;
@@ -171,6 +173,10 @@ public class NewDataPanel extends JPanel {
         listFields.get(id).setText(text);
     }
 
+    public int countFields() {
+        return listFields.size();
+    }
+
     public String[] getValueForInsert(String[] exceptionFields, boolean addID) {
         DefaultTableModel fields = getFields(exceptionFields);
         String[] result = new String[2];
@@ -202,15 +208,19 @@ public class NewDataPanel extends JPanel {
         return result;
     }
 
-    public String getQuetyForUpdate(String[] exceptionFields) {
-        DefaultTableModel fields = getFields(exceptionFields);
+    public String getQuetyForUpdate(String[][] extraFields) {
         StringBuilder query = new StringBuilder();
 
-        // перечисление названий полей в формате поле1,поле2,поле3
-        for (int i = 0; i < fields.getRowCount() - 1; i++) {
-            query.append(fields.getValueAt(i, 0)).append("='").append(getText(i)).append("',");
+        for (int i = 0; i < countFields() - 1; i++) {
+            query.append(getRow(i).getNameToSave()).append("='").append(getText(i)).append("',");
         }
-        query.append(fields.getValueAt(fields.getRowCount() - 1, 0)).append("='").append(getText(fields.getRowCount() - 1)).append("'");
+        query.append(getRow(countFields() - 1).getNameToSave()).append("='").append(getText(countFields() - 1)).append("'");
+
+        if (extraFields != null) {
+            for (String[] field : extraFields) {
+                query.append(",").append(field[0]).append("='").append(field[1]).append("'");
+            }
+        }
 
         return query.toString();
     }
@@ -296,7 +306,6 @@ public class NewDataPanel extends JPanel {
      * @return
      */
     public boolean saveToDB(boolean addID, String[] exceptionFields, String[] extraFields) {
-
         if (checkFields() == false) {
             return false;
         }
@@ -313,27 +322,22 @@ public class NewDataPanel extends JPanel {
         }
 
         query.append(")");
-
         sql.SendQuery(query.toString());
         return true;
     }
 
-    public boolean updateDB(String id) {
+    public boolean updateDB(String id, String[][] extraFields) {
 
         if (checkFields() == false) {
             return false;
         }
 
-        DefaultTableModel nameColumns = new DefaultTableModel();
-        StringBuilder query = new StringBuilder("update " + nameTable + " set");
-        sql.tableFill("select column_name \n"
-                + "  from user_tab_columns \n"
-                + "  where table_name = '" + nameTable + "'", nameColumns);
-        for (int i = 0; i < nameColumns.getRowCount(); i++) {
-            query.append(nameColumns.getValueAt(i, 0)).append("='").append(listFields.get(i).getText()).append("' ");
-        }
-        query.append("where ").append(id);
+        StringBuilder query = new StringBuilder("update " + nameTable + " set ");
+        query.append(getQuetyForUpdate(extraFields));
+        query.append(" where ").append(nameFieldID).append("=").append(id).append("");
+
         sql.SendQuery(query.toString());
+        log.logWriting("Внесены изменения в запись: '" + id + "' таблицы: " + nameTable);
         return true;
     }
 
@@ -346,20 +350,22 @@ public class NewDataPanel extends JPanel {
         boolean result = true;
         if (needToCheck) {
             for (int i = 0; i < listFields.size(); i++) {
-                if (listFields.get(i) instanceof CatalogField) {
-                    JTextField tmpField = (JTextField) listFields.get(i).getField();
-                    tmpField.setBorder(CreateFormUtils.defaultTextFieldBorder);
-                    if (TextUtils.checkRow(listFields.get(i).getNameCatalog(), tmpField.getText())) {
-                        tmpField.setBorder(BorderFactory.createLineBorder(Color.RED));
-                        result = false;
-                    }
-                    if (!TextUtils.isRowExeption(notCheckFields, listFields.get(i).getDiscriptionField()) && (tmpField.getText().equals("") || tmpField.getText().equals(" "))) {
-                        tmpField.setBorder(BorderFactory.createLineBorder(Color.RED));
-                        result = false;
-                    }
-                } else {
-                    if (TextUtils.checkTextField((JTextField) listFields.get(i).getField(), listFields.get(i).getDiscriptionField(), notCheckFields)) {
-                        result = false;
+                if (listFields.get(i).isChecked()) {
+                    if (listFields.get(i) instanceof CatalogField) {
+                        JTextField tmpField = (JTextField) listFields.get(i).getField();
+                        tmpField.setBorder(CreateFormUtils.defaultTextFieldBorder);
+                        if (TextUtils.checkRow(listFields.get(i).getNameCatalog(), tmpField.getText())) {
+                            tmpField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                            result = false;
+                        }
+                        if (!TextUtils.isRowExeption(notCheckFields, listFields.get(i).getDiscriptionField()) && (tmpField.getText().equals("") || tmpField.getText().equals(" "))) {
+                            tmpField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                            result = false;
+                        }
+                    } else {
+                        if (TextUtils.checkTextField(listFields.get(i).getField(), getText(i))) {
+                            result = false;
+                        }
                     }
                 }
             }

@@ -19,7 +19,7 @@ import my.guisap.utils.ImageUtils;
  */
 public class CatalogField extends EntityForField {
 
-    private String code;
+    private String code = "";
 
     private final JLabel nameField;
     private final JTextField textField;

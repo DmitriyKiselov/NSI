@@ -27,6 +27,7 @@ import my.guisap.forms.ConnectionFrame;
 import my.guisap.forms.EC.ECMain;
 import my.guisap.forms.ImportFromExcel;
 import my.guisap.forms.TableManager.LocalTablesManager;
+import my.guisap.forms.UpDetails.UpDetailsMain;
 
 /**
  *
@@ -92,6 +93,7 @@ public class MainWindow extends javax.swing.JFrame {
         jMenuItem34 = new javax.swing.JMenuItem();
         jMenu7 = new my.guisap.componenst.security.JSecurityMenu(new ArrayList<>(Arrays.asList(my.guisap.utils.SecurityManager.ADMINS, my.guisap.utils.SecurityManager.OPP, my.guisap.utils.SecurityManager.UNLOADING)));
         jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -230,6 +232,15 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
         jMenu7.add(jMenuItem2);
+
+        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/toolbarButtonGraphics/general/Edit16.gif")) );
+        jMenuItem9.setText("Конструкции верха");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem9);
 
         jMenuItem3.setText("Пополнение справочников");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
@@ -446,6 +457,10 @@ public class MainWindow extends javax.swing.JFrame {
         fr.openForm(new ImportFromExcel(), FormRegister.SELECT_KEY_FORM);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        fr.openForm(new UpDetailsMain(), FormRegister.MAIN_FORM);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu10;
@@ -475,5 +490,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     // End of variables declaration//GEN-END:variables
 }

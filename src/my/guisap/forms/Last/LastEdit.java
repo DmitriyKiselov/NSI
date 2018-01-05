@@ -31,9 +31,6 @@ public class LastEdit extends EmptyForm {
 
     NewDataPanel mainData = new NewDataPanel("LAST_HEAD", "ID", "LastEdit", 1);
 
-//    DataPanel mainData = new DataPanel("LAST_HEAD", "ID", 1);
-//    DataPanel infoData = new DataPanel("LAST_INFO", "INDEX_LAST", 1);
-//    DataPanel extraInfoData = new DataPanel("LAST_INFO_EXTRA", "INDEX_LAST", 1);
     String classFlag;
     LastMain ParrentForm;
     String indexLast;
@@ -114,7 +111,7 @@ public class LastEdit extends EmptyForm {
 
     @Override
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
-        saveToDB("FL");
+        saveToDB();
     }
 
     private void fillFields() {
@@ -207,27 +204,23 @@ public class LastEdit extends EmptyForm {
 //        infoData.getTextField(3).setText((String) tmpModel.getValueAt(0, 4));
     }
 
-    public void saveToDB(String status) {
+    public void saveToDB() {
 
-        String[] mainQuery = mainData.getValueForInsert(new String[]{"ID", "DATE_CREATE"}, true);
-
-        String query;
+        updateIndex();
 
         if (isEditing) {
-            query = "update GUI_SAP.LAST_HEAD set " + mainData.getQuetyForUpdate(new String[]{"ID", "DATE_CREATE"}) + " where ID=" + idLast + "";
+            mainData.updateDB(idLast, null);
         } else {
-            if (testIndexInDB(mainData.getText(0))) {
-                query = "insert into GUI_SAP.LAST_HEAD (" + mainQuery[0] + ") values"
-                        + " (" + mainQuery[1] + ")";
+            if (testIndexInDB(mainData.getText(0)) && mainData.saveToDB(true, new String[]{"ID", "DATE_CREATE"}, null)) {
+
             } else {
-                JOptionPane.showMessageDialog(this, "Колодка с указанным индексом уже есть в базе", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Заполните указанные поля", "Предупреждение", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
         }
 
-        sql.SendQuery(query);
-        LifeLineUtils.InsertLifeLine(LifeLineUtils.LAST_LIFE_LINE, mainData.getText(0), status);
+        LifeLineUtils.InsertLifeLine(LifeLineUtils.LAST_LIFE_LINE, mainData.getText(0), "FL");
 
         if (model != null) {
             sql.SendQuery("update GUI_SAP.MKZ_LIST_HEAD set CODE_LAST='" + mainData.getText(0) + "',  FASON_LAST='" + mainData.getText(6) + "',  status = 'LC' where MODEL = '" + model + "'");

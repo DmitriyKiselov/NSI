@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import my.guisap.componenst.AttributePanel;
@@ -33,28 +34,28 @@ public class TextUtils {
     public static boolean checkRow(String nameTable, String value) {
         boolean result = false;
         if (!value.equals("") && !value.equals(" ")) {
-            if (!sql.checkInfo("select * from GUI_SAP.SAPX_" + nameTable + " where NAME='" + value + "'")) {
+            if (!sql.checkInfo("select * from GUI_SAP." + nameTable + " where NAME='" + value + "'")) {
                 switch (nameTable) {
-                    case "ZTCODE_LAST": {
+                    case "SAPX_ZTCODE_LAST": {
 
                         if (!sql.checkInfo("select * from LAST_HEAD where INDEX_LAST='" + value + "'")) {
                             result = true;
                         }
                     }
                     break;
-                    case "ZTFASON_LAST": {
+                    case "SAPX_ZTFASON_LAST": {
                         if (!sql.checkInfo("select * from LAST_HEAD where FASON_LAST='" + value + "'")) {
                             result = true;
                         }
                     }
                     break;
-                    case "ZTFASON_SOLE": {
+                    case "SAPX_ZTFASON_SOLE": {
                         if (!sql.checkInfo("select * from LB_SOLE where ART='" + value + "'")) {
                             result = true;
                         }
                     }
                     break;
-                    case "ZTFASON_HEEL": {
+                    case "SAPX_ZTFASON_HEEL": {
                         if (!sql.checkInfo("select * from LB_HEEL where NAME='" + value + "'")) {
                             result = true;
                         }
@@ -99,6 +100,23 @@ public class TextUtils {
             }
         }
         return result;
+    }
+
+    /**
+     * Проверка поля на пустоту
+     *
+     * @param field компонент, используется для выделения рамки красным цветом
+     * при ошибке
+     * @param text текст для проверки
+     * @return true - поле пустое, false - значение присутствует
+     */
+    public static boolean checkTextField(JComponent field, String text) {
+        field.setBorder(CreateFormUtils.defaultTextFieldBorder);
+        if (text.equals("") || text.equals(" ")) {
+            field.setBorder(BorderFactory.createLineBorder(Color.RED));
+            return true;
+        }
+        return false;
     }
 
     /**
