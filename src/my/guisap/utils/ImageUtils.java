@@ -76,13 +76,13 @@ public class ImageUtils {
         }
     }
 
-    public static void saveImage(File fileImage, String path, String iconPath, String model) {
+    public static void saveImage(File fileImage, String path, String iconPath, String nameToSave) {
         try {
             //основной файл (путь к нему)
-            File newFile = new File(path + GuiStaticVariables.SEPARATOR + model + ".jpg");
+            File newFile = new File(path + GuiStaticVariables.SEPARATOR + nameToSave + ".jpg");
             //файл иконки (путь к нему)
-            File newFileIcon = new File(iconPath + GuiStaticVariables.SEPARATOR + model + ".jpg");
-            ImageUtils.CreateAndSaveIcon(fileImage, newFileIcon, model);
+            File newFileIcon = new File(iconPath + GuiStaticVariables.SEPARATOR + nameToSave + ".jpg");
+            ImageUtils.CreateAndSaveIcon(fileImage, newFileIcon, nameToSave);
 
             newFile.delete();
             Files.copy(fileImage.toPath(), newFile.toPath());

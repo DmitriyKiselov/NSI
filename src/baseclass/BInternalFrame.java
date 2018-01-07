@@ -42,7 +42,7 @@ public class BInternalFrame extends JInternalFrame {
     public final void setCenter() {
         setBounds(GuiStaticVariables.screenWidth / 2 - getWidth() / 2, (GuiStaticVariables.screenHeight - 70) / 2 - getHeight() / 2, getWidth(), getHeight());
     }
-
+    
     // нужно ли сохранять и восстанавливать размер и местоположение формы
     public boolean needSaveSize = true;
 }

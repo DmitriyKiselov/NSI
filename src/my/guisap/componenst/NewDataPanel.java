@@ -178,7 +178,7 @@ public class NewDataPanel extends JPanel {
     }
 
     public String[] getValueForInsert(String[] exceptionFields, boolean addID) {
-        DefaultTableModel fields = getFields(exceptionFields);
+        DefaultTableModel fields = sql.getColumnsFormTable(exceptionFields, nameTable);
         String[] result = new String[2];
 
         StringBuilder query = new StringBuilder();
@@ -387,19 +387,6 @@ public class NewDataPanel extends JPanel {
     public String generateNewID() {
         return sql.getObj("select NVL(max(TO_NUMBER(" + nameFieldID + ")),0)+1 from " + nameTable).toString();
     }
+    
 
-    public DefaultTableModel getFields(String[] exceptionFields) {
-        DefaultTableModel result = new DefaultTableModel();
-
-        StringBuilder exception = new StringBuilder();
-        for (String exceptionField : exceptionFields) {
-            exception.append(" and column_name not like '").append(exceptionField).append("'");
-        }
-
-        sql.tableFill("SELECT column_name"
-                + " FROM USER_TAB_COLUMNS"
-                + " WHERE table_name = '" + nameTable + "' " + exception.toString(), result);
-
-        return result;
-    }
 }

@@ -597,19 +597,16 @@ public class MkzAddModel extends EmptyForm {
         });
 
         // кнопка загрузить изображение
-        loadImage.addActionListener(new java.awt.event.ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                FileDialog fd = new FileDialog(new Frame(), "Выберите файл", FileDialog.LOAD);
-                fd.setFile("*.jpg;*.gif;*png");
-                fd.setVisible(true);
-                String filename = fd.getFile();
-                if (filename == null) {
-                    pathFile.setText("");
-                } else {
-                    imageModel = fd.getFiles()[0];
-                    pathFile.setText(imageModel.getPath());
-                }
+        loadImage.addActionListener((ActionEvent ae) -> {
+            FileDialog fd = new FileDialog(new Frame(), "Выберите файл", FileDialog.LOAD);
+            fd.setFile("*.jpg;*.gif;*png");
+            fd.setVisible(true);
+            String filename = fd.getFile();
+            if (filename == null) {
+                pathFile.setText("");
+            } else {
+                imageModel = fd.getFiles()[0];
+                pathFile.setText(imageModel.getPath());
             }
         });
 

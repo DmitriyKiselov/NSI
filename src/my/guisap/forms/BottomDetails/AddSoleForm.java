@@ -10,6 +10,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.NewDataPanel;
+import my.guisap.utils.CreateFormUtils;
 
 /**
  *
@@ -47,7 +48,7 @@ public class AddSoleForm extends EmptyForm {
 
     private void createFormFields() {
         pnlAttElem.add(data);
-        pnlAttElem.setLayout(new BoxLayout(pnlAttElem, BoxLayout.X_AXIS));
+        pnlAttElem.add(CreateFormUtils.CreateFieldDownloadImage());
         processing();
         pack();
         setCenter();

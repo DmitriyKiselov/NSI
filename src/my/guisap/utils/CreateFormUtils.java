@@ -5,12 +5,19 @@
  */
 package my.guisap.utils;
 
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,7 +43,7 @@ public class CreateFormUtils {
     public static final CompoundBorder defaultBorder = BorderFactory.createCompoundBorder(
             BorderFactory.createBevelBorder(BevelBorder.LOWERED),
             BorderFactory.createEmptyBorder(10, 10, 10, 10));
-    
+
     /**
      * Метод для создания нескольких текстовых полей для заполнения данных
      *
@@ -140,6 +147,33 @@ public class CreateFormUtils {
         tmpElement.add(tmpTextField);
 
         return tmpElement;
+    }
+
+    public static JPanel CreateFieldDownloadImage() {
+        JPanel loadImageBlock = new JPanel();
+        JTextField pathField = ComponentsUtils.createField("", 200, 23, false);
+        JButton button = ComponentsUtils.createBtn("", 27, 23, ImageUtils.createIconForButton("/toolbarButtonGraphics/general/History16.gif"), true);
+
+        button.addActionListener((ActionEvent ae) -> {
+            FileDialog fd = new FileDialog(new Frame(), "Выберите файл", FileDialog.LOAD);
+            fd.setFile("*.jpg;*.gif;*png");
+            fd.setVisible(true);
+            String filename = fd.getFile();
+            if (filename == null) {
+                pathField.setText("");
+            } else {
+                File imageModel = fd.getFiles()[0];
+                pathField.setText(imageModel.getPath());
+            }
+        });
+
+        loadImageBlock.setLayout(new BoxLayout(loadImageBlock, BoxLayout.X_AXIS));
+        loadImageBlock.add(ComponentsUtils.createLabel("Прикрепить изображение: "));
+        loadImageBlock.add(Box.createHorizontalGlue());
+        loadImageBlock.add(Box.createHorizontalStrut(GuiStaticVariables.TIGHTLE_STRUT));
+        loadImageBlock.add(pathField);
+        loadImageBlock.add(button);
+        return loadImageBlock;
     }
 
 }

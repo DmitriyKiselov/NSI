@@ -563,4 +563,19 @@ public class SqlOperations {
         }
     }
 
+    public DefaultTableModel getColumnsFormTable(String[] exceptionFields, String nameTable) {
+        DefaultTableModel result = new DefaultTableModel();
+
+        StringBuilder exception = new StringBuilder();
+        for (String exceptionField : exceptionFields) {
+            exception.append(" and column_name not like '").append(exceptionField).append("'");
+        }
+
+        tableFill("SELECT column_name"
+                + " FROM USER_TAB_COLUMNS"
+                + " WHERE table_name = '" + nameTable + "' " + exception.toString(), result);
+
+        return result;
+    }
+
 }
