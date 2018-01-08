@@ -119,7 +119,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setCellSelectionEnabled(true);&#xa;jTable1.setOpaque(false);&#xa;jTable1.setUpdateSelectionOnSort(false);&#xa;jTable1.setRowHeight(180);&#xa;jTable1.getColumnModel().getColumn(0).setPreferredWidth(140);"/>
+                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setCellSelectionEnabled(true);&#xa;jTable1.setOpaque(false);&#xa;jTable1.setUpdateSelectionOnSort(false);"/>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="TableRowFilterSupport&#xa;.forTable(new JTable(){&#xa;    @Override&#xa;    public boolean isCellEditable(int arg0, int arg1) {&#xa;        return false;&#xa;    };&#xa;})&#xa;.searchable(true)&#xa;.actions(true)&#xa;.apply()"/>
                   </AuxValues>
                 </Component>
@@ -275,7 +275,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable2.setAutoCreateRowSorter(true);&#xa;jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);&#xa;jTable2.setCellSelectionEnabled(true);&#xa;jTable2.setOpaque(false);&#xa;jTable2.setUpdateSelectionOnSort(false);"/>
+                    <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable2.setAutoCreateRowSorter(true);&#xa;//jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);&#xa;jTable2.setCellSelectionEnabled(true);&#xa;jTable2.setOpaque(false);&#xa;jTable2.setUpdateSelectionOnSort(false);"/>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="TableRowFilterSupport&#xa;.forTable(new JTable() {&#xa;    @Override&#xa;    public boolean isCellEditable(int arg0, int arg1) {&#xa;        return false;&#xa;    }&#xa;})&#xa;.searchable(true)&#xa;.actions(true)&#xa;.apply()"/>
                   </AuxValues>
                 </Component>

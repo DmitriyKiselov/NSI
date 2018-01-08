@@ -80,7 +80,8 @@ public class MainClass {
                 }
                 mainWindow = new MainWindow();
                 mainWindow.setVisible(true);
-                UpdateForm check = new UpdateForm(desktop);
+                FormRegister fr = FormRegister.getInstance();
+                fr.openForm(new UpdateForm(true), FormRegister.SELECT_KEY_FORM);
             }
         });
     }

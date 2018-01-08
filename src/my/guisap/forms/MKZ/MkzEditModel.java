@@ -27,6 +27,7 @@ import my.guisap.attributeRow;
 import my.guisap.componenst.DataPanel;
 import my.guisap.forms.ImageForm;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.CreateFormUtils;
 import my.guisap.utils.ImageUtils;
@@ -34,44 +35,44 @@ import my.guisap.utils.LifeLineUtils;
 import my.guisap.utils.TextUtils;
 
 public class MkzEditModel extends EmptyForm {
-    
+
     ArrayList<AttributePanel> listForCheck = new ArrayList<>();
     List<DefaultTableModel> allRowsFromSap = new ArrayList<>();
-    
+
     String classFlag;
     String Model;
     Insets defaultInsets = new Insets(0, 5, 0, 10);
-    
+
     boolean Update_h = false;
     int CountInRow = 0;
     int CountAddArt = 0;
     String ID_RECORD = "0";
     String IndexLast = "0";
-    
+
     JPanel attPanel_all = new JPanel(new GridBagLayout());
     JPanel ArtPannel = new JPanel(new GridBagLayout());
     JScrollPane sp_ArtPannel;
     int HeightSP = 0;
-    
+
     String StatusModel = "";
     JButton finishStageBtn;
     MkzMainForm ParrentForm;
-    
+
     JPanel MODEL_STEP1;
     JPanel MODEL_STEP2;
     JButton addArtBtn;
     JButton hide;
     Boolean isHide = false;
-    
+
     MkzEditModel linkToThis = this;
 
     //строка содежращая 2 последних символа модели
     String twoLastCharModelName;
     String EditingModel = "";
     StringBuilder artLeather = new StringBuilder("0000000000000");
-    
+
     public ArrayList<String[]> EditingArt = new ArrayList<>();
-    
+
     public ArrayList<ArrayList> ListArtInfo = new ArrayList<>();
     public ArrayList<ArrayList> ListMatUpper = new ArrayList<>();
     public ArrayList<ArrayList> ListLining = new ArrayList<>();
@@ -84,7 +85,7 @@ public class MkzEditModel extends EmptyForm {
     public ArrayList<ArrayList> ListFindings = new ArrayList<>();
     public ArrayList<ArrayList> ListShoelace = new ArrayList<>();
     public ArrayList<ArrayList> ListThreads = new ArrayList<>();
-    
+
     Map<String, Integer> mapToFormArtLth = new HashMap<String, Integer>() {
         {
             put("Z_RANK_CRAST", 0);
@@ -97,14 +98,14 @@ public class MkzEditModel extends EmptyForm {
             put("Z_COMPLEXION_BY_RALA", 9);
         }
     };
-    
+
     public MkzEditModel(String caption, String classFlag, MkzMainForm ParrentForm, String Model) {
-        
+
         super(caption + " " + Model, classFlag, true, false);
-        
+
         setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
         setResizable(false);
-        
+
         if (GuiStaticVariables.screenWidth > 3000) {
             CountInRow = 4;
             setPreferredSize(new Dimension(GuiStaticVariables.screenWidth - 1000, GuiStaticVariables.screenHeight - 700));
@@ -112,17 +113,17 @@ public class MkzEditModel extends EmptyForm {
             CountInRow = (int) GuiStaticVariables.screenWidth / 390;
         }
         this.ParrentForm = ParrentForm;
-        
+
         this.Model = Model;
         this.classFlag = classFlag;
-        
+
         twoLastCharModelName = "" + Model.charAt(Model.length() - 2) + Model.charAt(Model.length() - 1);
         fr = FormRegister.getInstance();
         log = LogClass.getInstance();
         createAllRowsFromSap();
         modelElemFill();
     }
-    
+
     public MkzEditModel(String caption, String classFlag, String Model) {
         super(caption + " " + Model, classFlag, true, false);
         setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
@@ -140,35 +141,35 @@ public class MkzEditModel extends EmptyForm {
         log = LogClass.getInstance();
         createAllRowsFromSap();
         modelElemFill();
-        
+
         pnlSouth.setVisible(false);
     }
-    
+
     private void modelElemFill() {
-        
+
         MODEL_STEP1 = new JPanel();
         MODEL_STEP2 = new JPanel(new GridBagLayout());
         int NowCount = 0;
-        
+
         MODEL_STEP1 = ReadModelElem();
-        
+
         sql.tableFill(SqlOperations.DATA_SELECTION_2 + "'MODEL_STEP2' and b.MAIN_CLASS = 'MODEL_STEP2' " + SqlOperations.GROUP_BY, dataModel);
-        
+
         headAttPanel = new AttributePanel(dataModel, true, 0);
-        
+
         for (attributeRow atR : headAttPanel.rowList) {
             MODEL_STEP2.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         MODEL_STEP1.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
         MODEL_STEP2.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        
+
         addArtBtn = ComponentsUtils.createBtn("Добавить артикул ", 130, 23, true);
         addArtBtn.addActionListener(new ActionListener() {
             @Override
@@ -182,7 +183,7 @@ public class MkzEditModel extends EmptyForm {
         if (twoLastCharModelName.equals("99")) {
             addArtBtn.setEnabled(false);
         }
-        
+
         hide = new JButton("Скрыть первые этапы");
         hide.setFont(GuiStaticVariables.globalFont);
         hide.addActionListener(new ActionListener() {
@@ -201,16 +202,16 @@ public class MkzEditModel extends EmptyForm {
                 }
             }
         });
-        
+
         attPanel_all.add(hide,
                 new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         attPanel_all.add(MODEL_STEP1,
                 new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         attPanel_all.add(MODEL_STEP2,
                 new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0));
-        
+
         pnlAttElem.add(attPanel_all);
-        
+
         pnlSouth.add(new JLabel("   "));
         finishStageBtn = ComponentsUtils.createBtn("Завершить этап. Отправить на рассмотрение", 300, 23, true);
         finishStageBtn.addActionListener(new ActionListener() {
@@ -224,7 +225,7 @@ public class MkzEditModel extends EmptyForm {
         pnlSouth.add(addArtBtn);
         pnlSouth.add(Box.createHorizontalBox());
         pnlSouth.add(new JLabel("   "));
-        
+
         if (!StatusModel.equals("N") && !StatusModel.equals("R_U")) {
             addArtBtn.setEnabled(false);
             finishStageBtn.setEnabled(false);
@@ -232,71 +233,71 @@ public class MkzEditModel extends EmptyForm {
             SetEnabledStepTwo(false);
             needToSave = false;
         }
-        
+
         pack();
-        
+
         HeightSP = getHeight();
         LoadSave();
         setCenter();
     }
-    
+
     public void NextStage() {
         if (!checkAllRow()) {
             JPanel Temp;
-            
+
             Save_All_MKZ(true);
-            
+
             sql.SendQuery("update GUI_SAP.MKZ_LIST_HEAD set status = 'W' where ID = '" + ID_RECORD + "'");
             LifeLineUtils.UpdateLifeLine(LifeLineUtils.MKZ_LIFE_LINE, Model, "W");
             sql.SendQuery("update GUI_SAP.MKZ_MODEL_ART set status = 'W' where MODEL_ID = '" + ID_RECORD + "'");
             sql.SendQuery("commit");
-            
+
             for (int i = 0; i < ArtPannel.getComponentCount(); i++) {
                 Temp = ((JPanel) (ArtPannel.getComponent(i)));
                 SetEnabledArt(((JLabel) Temp.getComponent(0)).getText().replace("Артикул ", ""), false);
             }
-            
+
             SetEnabledStepTwo(false);
             ParrentForm.modelFormation(null);
             addArtBtn.setEnabled(false);
             finishStageBtn.setEnabled(false);
             saveButt.setEnabled(false);
             needToSave = false;
-            
+
             closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Присутствуют данные отсутствующие в справочниках, дождитесь их добавления", "Предупреждение", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
     public void Btn_Add_Art() {
         Btn_Add_Art(null, true, "");
     }
-    
+
     public void Btn_Add_Art(String NumArt, boolean This_New_Elem, String copyArt) {
         ArtPannel.add(addArtForm(NumArt),
                 new GridBagConstraints(0, CountAddArt, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
         if (CountAddArt == 0) {
             sp_ArtPannel = new JScrollPane(ArtPannel);
             sp_ArtPannel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-            
+
             Dimension NewDimension = new Dimension(getWidth(), (int) (GuiStaticVariables.screenHeight * 0.8) - HeightSP);
-            
+
             sp_ArtPannel.setMinimumSize(NewDimension);
             sp_ArtPannel.setPreferredSize(NewDimension);
             setPreferredSize(new Dimension(getWidth(), (int) (GuiStaticVariables.screenHeight * 0.9)));
-            
+
             attPanel_all.add(sp_ArtPannel,
                     new GridBagConstraints(0, 4, 1, 1, 1, 10, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(5, 0, 0, 0), 0, 0));
         }
-        
+
         if (CountAddArt != 0 && This_New_Elem && !copyArt.equals("")) {
             String Copy_art = copyArt;
             String Copy_to_art = EditingArt.get(EditingArt.size() - 1)[0];
             ArrayList<JTextField> RowElem = null;
             ArrayList<JTextField> RowElemCopy = null;
             JPanel TempPanel = null;
-            
+
             for (String[] StrMas : GuiStaticVariables.listAllBlocksSketch) {
                 for (int k = 0; k < ReturnListElemPanel(Integer.valueOf(StrMas[1])).size(); k++) {
                     RowElem = ReturnListElemPanel(Integer.valueOf(StrMas[1])).get(k);
@@ -310,7 +311,7 @@ public class MkzEditModel extends EmptyForm {
                                 }
                             }
                         }
-                        
+
                         for (int r = 0; r < ReturnListElemPanel(Integer.valueOf(StrMas[1])).size(); r++) {
                             RowElemCopy = ReturnListElemPanel(Integer.valueOf(StrMas[1])).get(r);
                             if ((RowElemCopy.get(0)).getText().equals(Copy_to_art)
@@ -325,12 +326,12 @@ public class MkzEditModel extends EmptyForm {
             }
             Save_All_MKZ(false);
         }
-        
+
         CountAddArt++;
-        
+
         pack();
     }
-    
+
     public void LoadSave() {
         DefaultTableModel tempData = new DefaultTableModel();
         sql.tableFill("select * from GUI_SAP.MKZ_STEP2 where id = '" + ID_RECORD + "'", tempData);
@@ -361,34 +362,34 @@ public class MkzEditModel extends EmptyForm {
                 headAttPanel.rowList.get(11).txt.setText((String) tempData.getValueAt(0, 3));
             }
         }
-        
+
         tempData = new DefaultTableModel();
         sql.tableFill("select lpad(ART_ID,2,'0'),ART,STATUS from GUI_SAP.MKZ_MODEL_ART where model_id = '" + ID_RECORD + "' order by ART_ID", tempData);
-        
+
         if (tempData.getRowCount() > 0) {
-            
+
             for (int i = 0; i < tempData.getRowCount(); i++) {
                 if (tempData.getValueAt(i, 1) != null) {
-                    
+
                     Add_Editing_Art(tempData.getValueAt(i, 1).toString(), tempData.getValueAt(i, 2).toString());
                     Btn_Add_Art(tempData.getValueAt(i, 1).toString(), false, "");
                 }
             }
-            
+
             for (String[] StrMas : GuiStaticVariables.listAllBlocksSketch) {
                 Load_Elem(StrMas[0], Integer.valueOf(StrMas[1]), ReturnListElemPanel(Integer.valueOf(StrMas[1])), StrMas[2], StrMas[3]);
             }
-            
+
             for (String[] EditingArtStr : EditingArt) {
                 if (!EditingArtStr[1].equals("F")) {
                     SetEnabledArt(EditingArtStr[0], false);
                 }
             }
-            
+
             pack();
         }
     }
-    
+
     public void Load_Elem(String Table, int NumPanel, ArrayList<ArrayList> ListElem, String NameElem, String AdditionElem) {
         DefaultTableModel tempData = new DefaultTableModel();
         String quer = "select * from GUI_SAP." + Table + " \n"
@@ -406,7 +407,7 @@ public class MkzEditModel extends EmptyForm {
                         }
                     }
                 }
-                
+
                 for (ArrayList<JTextField> RowElem : ListElem) {
                     if (RowElem.get(0).getText().equals(tempData.getValueAt(i, 0).toString())
                             && RowElem.get(1).getText().equals(tempData.getValueAt(i, 1).toString())) {
@@ -422,7 +423,7 @@ public class MkzEditModel extends EmptyForm {
             }
         }
     }
-    
+
     public JPanel ReadModelElem() {
         int NowCount;
         JPanel OutPanel = new JPanel(new GridBagLayout());
@@ -447,15 +448,15 @@ public class MkzEditModel extends EmptyForm {
             "Код колодки",
             "Фасон каблука",
             "Модельер"};
-        
+
         JPanel imgPanel = new JPanel(new GridBagLayout());
         JPanel designPanel = new JPanel(new GridBagLayout());
-        
+
         JButton img = ComponentsUtils.createBtn("Фото модели", 200, 18, true);
         JButton design = ComponentsUtils.createBtn("Эскиз", 200, 18, true);
         JButton imgAdd = ComponentsUtils.createBtn("+", 20, 18, true);
         JButton designAdd = ComponentsUtils.createBtn("+", 20, 18, true);
-        
+
         imgPanel.add(img,
                 new GridBagConstraints(0, 0, 1, 1, 5, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
         imgPanel.add(imgAdd,
@@ -464,7 +465,7 @@ public class MkzEditModel extends EmptyForm {
                 new GridBagConstraints(0, 0, 1, 1, 4, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
         designPanel.add(designAdd,
                 new GridBagConstraints(5, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
-        
+
         for (int i = 0; i < dtm.getRowCount(); i++) {
             for (int j = 1; j < NameColumn.length; j++) {
                 NowCount = (i * dtm.getColumnCount() + (j - 1));
@@ -475,26 +476,26 @@ public class MkzEditModel extends EmptyForm {
                 Element.add(label);
                 Element.add(Box.createHorizontalGlue());
                 Element.add(Box.createHorizontalStrut(GuiStaticVariables.TIGHTLE_STRUT));
-                
+
                 JTextField Field;
                 if (dtm.getValueAt(i, j) != null) {
                     Field = new JTextField(dtm.getValueAt(i, j).toString());
                 } else {
                     Field = new JTextField("");
                 }
-                
+
                 Field.setEditable(false);
                 Field.setFont(GuiStaticVariables.globalFont);
                 Field.setPreferredSize(new Dimension((int) (227 * GuiStaticVariables.scaleWidth), (int) (23 * GuiStaticVariables.scaleHeight)));
                 Field.setMaximumSize(new Dimension((int) (227 * GuiStaticVariables.scaleWidth), (int) (23 * GuiStaticVariables.scaleHeight)));
-                
+
                 Element.add(Field);
                 OutPanel.add(Element,
                         new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
             }
-            
+
         }
-        
+
         img.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -508,12 +509,12 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model, CacheImage.cacheModel);
                     }
                 }
             }
         });
-        
+
         design.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -527,12 +528,12 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model, null);
                     }
                 }
             }
         });
-        
+
         imgAdd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -544,14 +545,14 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model,CacheImage.cacheModel);
                     }
                 } else {
-                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model);
+                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model,CacheImage.cacheModel);
                 }
             }
         });
-        
+
         designAdd.addActionListener(new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -563,20 +564,20 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model,null);
                     }
                 } else {
-                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model);
+                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model,null);
                 }
             }
         }
         );
-        
+
         OutPanel.add(imgPanel,
                 new GridBagConstraints(0, (int) (NameColumn.length / CountInRow) + 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(10, 10, 0, 0), 0, 0));
         OutPanel.add(designPanel,
                 new GridBagConstraints(1, (int) (NameColumn.length / CountInRow) + 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(10, 10, 0, 0), 0, 0));
-        
+
         return OutPanel;
     }
 
@@ -595,16 +596,16 @@ public class MkzEditModel extends EmptyForm {
         JPanel Findings = new JPanel(new GridBagLayout());
         JPanel Shoelace = new JPanel(new GridBagLayout());
         JPanel Threads = new JPanel(new GridBagLayout());
-        
+
         ArtForm.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createBevelBorder(BevelBorder.LOWERED),
                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-        
+
         JLabel labelArt = new JLabel("Артикул " + NumArt);
         labelArt.setFont(new Font("Arial", 1, (int) (18 * GuiStaticVariables.scaleHeight)));
-        
+
         Add_Editing_Art(NumArt, "F");
-        
+
         JButton AddMatUpeerElem = new JButton("Добавить материал верха");
         AddMatUpeerElem.setFont(GuiStaticVariables.globalFont);
         AddMatUpeerElem.addActionListener(new ActionListener() {
@@ -613,7 +614,7 @@ public class MkzEditModel extends EmptyForm {
                 Btn_Add_Element((JPanel) ((JButton) (e.getSource())).getParent(), 2, ListMatUpper, "Материал верха ", "true");
             }
         });
-        
+
         JButton AddLiningElem = new JButton("Добавить Подкладку");
         AddLiningElem.setFont(GuiStaticVariables.globalFont);
         AddLiningElem.addActionListener(new ActionListener() {
@@ -622,7 +623,7 @@ public class MkzEditModel extends EmptyForm {
                 Btn_Add_Element((JPanel) ((JButton) (e.getSource())).getParent(), 4, ListLining, "Подкладка ", "true");
             }
         });
-        
+
         JButton AddFindingsElem = new JButton("Добавить Фурнитуру");
         AddFindingsElem.setFont(GuiStaticVariables.globalFont);
         AddFindingsElem.addActionListener(new ActionListener() {
@@ -631,7 +632,7 @@ public class MkzEditModel extends EmptyForm {
                 Btn_Add_Element((JPanel) ((JButton) (e.getSource())).getParent(), 12, ListFindings, "Фурнитура ", "true");
             }
         });
-        
+
         JButton AddThreadsElem = new JButton("Добавить Нитки");
         AddThreadsElem.setFont(GuiStaticVariables.globalFont);
         AddThreadsElem.addActionListener(new ActionListener() {
@@ -640,7 +641,7 @@ public class MkzEditModel extends EmptyForm {
                 Btn_Add_Element((JPanel) ((JButton) (e.getSource())).getParent(), 15, ListThreads, "Нитки ", "true");
             }
         });
-        
+
         ArtForm.add(labelArt,
                 new GridBagConstraints(0, 0, 1, 1, 0.2, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         ArtForm.add(ArtInfo,
@@ -675,13 +676,13 @@ public class MkzEditModel extends EmptyForm {
                 new GridBagConstraints(0, 15, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(10, 20, 0, 0), 0, 0));
         ArtForm.add(AddThreadsElem,
                 new GridBagConstraints(0, 16, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 0, 0), 0, 0));
-        
+
         for (String[] StrMas : GuiStaticVariables.listAllBlocksSketch) {
             Btn_Add_Element(ArtForm, Integer.valueOf(StrMas[1]), ReturnListElemPanel(Integer.valueOf(StrMas[1])), StrMas[2], StrMas[3]);
         }
         return ArtForm;
     }
-    
+
     public void Add_Editing_Art(String Art, String Record) {
         int replaceNum = 0;
         for (String[] StrMas : EditingArt) {
@@ -692,10 +693,10 @@ public class MkzEditModel extends EmptyForm {
             }
             replaceNum++;
         }
-        
+
         EditingArt.add(new String[]{Art, Record});
     }
-    
+
     public JPanel ReturnAddingPanel(int num, String NameArt, int numElem) {
         switch (num) {
             case 1:
@@ -726,7 +727,7 @@ public class MkzEditModel extends EmptyForm {
                 return new JPanel();
         }
     }
-    
+
     public ArrayList<ArrayList> ReturnListElemPanel(int num) {
         switch (num) {
             case 1:
@@ -757,20 +758,20 @@ public class MkzEditModel extends EmptyForm {
                 return new ArrayList<>();
         }
     }
-    
+
     ;
 
    public void Btn_Add_Element(JPanel HeadPanel, int NumAddingPanel, ArrayList<ArrayList> ListElem, String NameElem, String AddNumNameElem) {
         JPanel PanelElem = (JPanel) HeadPanel.getComponent(NumAddingPanel);
         String Art_Name = ((JLabel) HeadPanel.getComponent(0)).getText().replace("Артикул ", "");
         int num_Elem = 1;
-        
+
         for (ArrayList<JTextField> RowElem : ListElem) {
             if (RowElem.get(0).getText().equals(Art_Name)) {
                 num_Elem = Integer.valueOf(RowElem.get(1).getText()) + 1;
             }
         }
-        
+
         JPanel jpAddElement = new JPanel(new GridBagLayout());
         JLabel labelNameElem;
         if (AddNumNameElem.equals("true")) {
@@ -779,39 +780,39 @@ public class MkzEditModel extends EmptyForm {
             labelNameElem = new JLabel(NameElem);
         }
         labelNameElem.setFont(new Font("Arial", 1, (int) (13 * GuiStaticVariables.scaleHeight)));
-        
+
         jpAddElement.add(labelNameElem,
                 new GridBagConstraints(0, 0, 1, 1, 0.2, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         jpAddElement.add(ReturnAddingPanel(NumAddingPanel, Art_Name, num_Elem),
                 new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
         PanelElem.add(jpAddElement,
                 new GridBagConstraints(0, num_Elem - 1, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-        
+
         pack();
         setCenter();
     }
-    
+
     public JPanel addArtInfo(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(13), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
         ListArtInfo.add(RowElem);
-        
+
         return PanelElem;
     }
 
@@ -822,7 +823,7 @@ public class MkzEditModel extends EmptyForm {
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowMatUpper = new ArrayList<>();
-        
+
         RowMatUpper.add(new JTextField(NameArt));
         RowMatUpper.add(new JTextField(String.valueOf(NumMatUpper)));
 
@@ -832,16 +833,16 @@ public class MkzEditModel extends EmptyForm {
             {"Артикул пленки 2", "true"},
             {"Перфорация лазер", "true"},
             {"Перфорация плитой", "true"}};
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(0), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowMatUpper.add(atR.txt);
             MatUpper.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
 
         //вывод полей из массива
@@ -851,7 +852,7 @@ public class MkzEditModel extends EmptyForm {
         MatUpper.add(jp_temp,
                 new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
         NowCount++;
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(1), true, 0);
         for (final attributeRow atR : addPanel.rowList) {
             RowMatUpper.add(atR.txt);
@@ -870,12 +871,12 @@ public class MkzEditModel extends EmptyForm {
                 });
             }
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(LastMasElem, RowMatUpper, MatUpper, NowCount, CountInRow, defaultInsets);
         createCostRow(MatUpper, RowMatUpper, NowCount, "(дм2)");
-        
+
         ListMatUpper.add(RowMatUpper);
         return MatUpper;
     }
@@ -886,292 +887,292 @@ public class MkzEditModel extends EmptyForm {
         int NowCount = 0;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String LastMasElem[][] = {
             {"Артикул поставщика", "true"}};
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(2), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(LastMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(дм2)");
-        
+
         ListLining.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addSole(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон подошвы", "false"},
             {"Артикул подошвы ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(4), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         for (int i = 0; i < FirstMasElem.length; i++) {
             jp_temp = CreateFormUtils.CreateElem(FirstMasElem[i][0], null, FirstMasElem[i][1]);
             RowElem.add((JTextField) (jp_temp.getComponent(3)));
-            
+
             if (FirstMasElem[i][0].equals("Фасон подошвы")) {
                 ((JTextField) (jp_temp.getComponent(3))).setText(headAttPanel.rowList.get(1).txt.getText());
             }
-            
+
             PanelElem.add(jp_temp,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListSole.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addHEEL(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон каблука", "false"},
             {"Артикул каблука ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(5), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         for (int i = 0; i < FirstMasElem.length; i++) {
             jp_temp = CreateFormUtils.CreateElem(FirstMasElem[i][0], null, FirstMasElem[i][1]);
             RowElem.add((JTextField) (jp_temp.getComponent(3)));
-            
+
             if (FirstMasElem[i][0].equals("Фасон каблука")) {
                 ((JTextField) (jp_temp.getComponent(3))).setText(headAttPanel.rowList.get(3).txt.getText());
             }
-            
+
             PanelElem.add(jp_temp,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListHEEL.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addInsole(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон основной стельки", "true"},
             {"Доп. Описание ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(6), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListINSOLE.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addInsock(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон вкладной стельки", "true"},
             {"Доп. Описание ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(7), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListINSOCK.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addBackcloth(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон задника", "true"},
             {"Доп. Описание ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(8), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListBACKLOTH.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addLightning(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Фасон молнии", "true"},
             {"Артикул ", "true"},
@@ -1179,204 +1180,204 @@ public class MkzEditModel extends EmptyForm {
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(9), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListLIGHTNING.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addFindings(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Артикул фурнитуры", "true"},
             {"Доп. Описание ", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(10), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(шт)");
-        
+
         ListFindings.add(RowElem);
         return PanelElem;
     }
-    
+
     public JPanel addShoelace(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         JPanel jp_temp;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String FirstMasElem[][] = {
             {"Артикул шнурка", "true"},
             {"Длина", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(11), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(FirstMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(пара)");
-        
+
         ListShoelace.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addThreads(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
-        
+
         String LastMasElem[][] = {
             {"Артикул поставщика", "true"},
             {"Толщина", "true"}};
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(12), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         CreateFormUtils.CreatePanelOfTextFields(LastMasElem, RowElem, PanelElem, NowCount, CountInRow, defaultInsets);
         createCostRow(PanelElem, RowElem, NowCount, "(м)");
-        
+
         ListThreads.add(RowElem);
-        
+
         return PanelElem;
     }
-    
+
     public JPanel addPocket(String NameArt, int NumElem) {
         JPanel PanelElem = new JPanel(new GridBagLayout());
         int NowCount = 0;
         AttributePanel addPanel;
         ArrayList<JTextField> RowElem = new ArrayList<>();
-        
+
         RowElem.add(new JTextField(NameArt));
         RowElem.add(new JTextField(String.valueOf(NumElem)));
 
         //создание поля с данными о поставщике из справочника 
         addPanel = new AttributePanel(allRowsFromSap.get(3), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         addPanel = new AttributePanel(allRowsFromSap.get(14), true, 0);
-        
+
         for (attributeRow atR : addPanel.rowList) {
             RowElem.add(atR.txt);
             PanelElem.add(atR,
                     new GridBagConstraints(NowCount % CountInRow, (int) NowCount / CountInRow, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 5, 0, 10), 0, 0));
             NowCount++;
         }
-        
+
         listForCheck.add(addPanel);
-        
+
         createCostRow(PanelElem, RowElem, NowCount, "(шт)");
-        
+
         ListThreads.add(RowElem);
-        
+
         return PanelElem;
     }
 
@@ -1385,11 +1386,11 @@ public class MkzEditModel extends EmptyForm {
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
         Save_All_MKZ(true);
     }
-    
+
     public void Save_All_MKZ(boolean SendMessage) {
         int MassCount = headAttPanel.rowList.size() + 2;
         String query;
-        
+
         if (Update_h) {
             query = "update GUI_SAP.MKZ_STEP2 set "
                     + "(ID, PADS_TYPE, TYPE_SOLE, TYPE_HEEL, TYPE_CONSTRUCTION, COMPLETENESS_PADS, COMPLETENESS_SHOES, KIND_ADJUSTMENT, HEIGHT_HEEL_PART, HEIGHT_HEEL_SOLE, SHAFT, SIZE_SHAFT, HEIGHT_SOLE, KIND_ADJUSTMENT_READY) = "
@@ -1399,18 +1400,18 @@ public class MkzEditModel extends EmptyForm {
                     + "(ID, PADS_TYPE, TYPE_SOLE,  TYPE_HEEL, TYPE_CONSTRUCTION, COMPLETENESS_PADS, COMPLETENESS_SHOES, KIND_ADJUSTMENT, HEIGHT_HEEL_PART, HEIGHT_HEEL_SOLE, SHAFT, SIZE_SHAFT, HEIGHT_SOLE, KIND_ADJUSTMENT_READY) values"
                     + "( ";
         }
-        
+
         String[] data = new String[MassCount];
         int count = 0;
-        
+
         data[count] = ID_RECORD;
         count++;
-        
+
         for (attributeRow atR : headAttPanel.rowList) {
             data[count] = atR.txt.getText();
             count++;
         }
-        
+
         for (int i = 0; i < count; i++) {
             if (i != count - 1) {
                 query += "'" + data[i] + "',";
@@ -1418,40 +1419,40 @@ public class MkzEditModel extends EmptyForm {
                 query += "'" + data[i] + "'";
             }
         }
-        
+
         if (Update_h) {
             query += " from dual)";
         } else {
             query += " )";
         }
-        
+
         if (Update_h) {
             query += " where ID = '" + ID_RECORD + "'";
         }
-        
+
         sql.SendQuery(query);
-        
+
         Update_h = true;
-        
+
         for (String[] StrMas : GuiStaticVariables.listAllBlocksSketch) {
             Save_MKZ_List_Elem(StrMas[0], ReturnListElemPanel(Integer.valueOf(StrMas[1])));
         }
-        
+
         JOptionPane.showMessageDialog(this,
                 "Модельные данные сохранены.", "Предупреждение", JOptionPane.WARNING_MESSAGE);
         needToSave = false;
-        
+
         if (SendMessage) {
             log.logWriting("Заполение модели " + Model + " окончено.");
             saveArt();
         }
     }
-    
+
     public boolean Save_MKZ_List_Elem(String Table, ArrayList<ArrayList> ListElem) {
         int CountMas;
         String query;
         DefaultTableModel tempData = new DefaultTableModel();
-        
+
         sql.tableFill("select column_names from \n"
                 + "(select column_id,ltrim(sys_connect_by_path(Column_Name, ','),',') as Column_Names from\n"
                 + "(select  t.column_id,t.COLUMN_NAME,lag(t.COLUMN_NAME) over (order by t.column_id ) as COLUMN_NAME_1 from \n"
@@ -1461,13 +1462,13 @@ public class MkzEditModel extends EmptyForm {
                 + ")\n"
                 + "start with Column_Name_1 is null\n"
                 + "connect by Column_Name_1 = prior COLUMN_NAME order by column_id DESC) where rownum = 1", tempData);
-        
+
         if (tempData.getValueAt(0, 0) != null) {
             query = tempData.getValueAt(0, 0).toString();
         } else {
             return false;
         }
-        
+
         String QuerIns = "insert into GUI_SAP." + Table + "(" + query + ") (select ?1? from dual)";
         String QuerUpd = "update GUI_SAP." + Table + " set (" + query + ") = (select ?1? from dual) where ART = '?2?' and ID = '?3?'";
         String tmpQuer = "";
@@ -1481,22 +1482,22 @@ public class MkzEditModel extends EmptyForm {
                     tmpQuer += "'" + RowElem.get(i).getText() + "'";
                 }
             }
-            
+
             tempData = new DefaultTableModel();
             sql.tableFill("select * from GUI_SAP." + Table + " where art = '" + RowElem.get(0).getText() + "' and id = '" + RowElem.get(1).getText() + "'", tempData);
-            
+
             if (tempData.getRowCount() > 0) {
                 query = QuerUpd.replace("?1?", tmpQuer).replace("?2?", RowElem.get(0).getText()).replace("?3?", RowElem.get(1).getText());
             } else {
                 query = QuerIns.replace("?1?", tmpQuer);
             }
-            
+
             sql.SendQuery(query);
         }
-        
+
         return true;
     }
-    
+
     private void saveArt() {
         DefaultTableModel tempData = new DefaultTableModel();
         sql.tableFill("select ART_ID,ART,STATUS from GUI_SAP.MKZ_MODEL_ART where model_id = '" + ID_RECORD + "' order by ART_ID", tempData);
@@ -1508,7 +1509,7 @@ public class MkzEditModel extends EmptyForm {
                     + " ART = '" + ((ArrayList<JTextField>) ListArtInfo.get(i)).get(0).getText() + "'");
         }
     }
-    
+
     public void fillArt(DataPanel data, String art) {
         for (ArrayList<JTextField> listFields : ListArtInfo) {
             if (listFields.get(0).getText().equals(art)) {
@@ -1530,7 +1531,7 @@ public class MkzEditModel extends EmptyForm {
             return tempData.getValueAt(tempData.getRowCount() - 1, 0).toString();
         }
     }
-    
+
     private void createAllRowsFromSap() {
         //Материалы верха индекс:0,1
         allRowsFromSap.add(createBlockRows(SqlOperations.DATA_SELECTION_2 + "'UPPER_MATERIAL' and b.MAIN_CLASS = 'UPPER_MATERIAL' and b.PRIORITY<5" + SqlOperations.GROUP_BY));
@@ -1562,13 +1563,13 @@ public class MkzEditModel extends EmptyForm {
         //Карман: 14
         allRowsFromSap.add(createBlockRows(SqlOperations.DATA_SELECTION + "'POCKET' and MAIN_CLASS = 'POCKET'" + SqlOperations.GROUP_BY));
     }
-    
+
     private DefaultTableModel createBlockRows(String query) {
         DefaultTableModel outBaseModel = new DefaultTableModel();
         sql.tableFill(query, outBaseModel);
         return outBaseModel;
     }
-    
+
     private boolean checkAllRow() {
         if (TextUtils.checkAttributePanel(headAttPanel, true)) {
             return true;
@@ -1580,13 +1581,13 @@ public class MkzEditModel extends EmptyForm {
 //        }
         return false;
     }
-    
+
     private void SetEnabledStepTwo(boolean EnabledValue) {
         for (attributeRow atR : headAttPanel.rowList) {
             atR.btn.setEnabled(EnabledValue);
         }
     }
-    
+
     private void SetEnabledArt(String NameArt, boolean EnabledValue) {
         JPanel Temp;
         for (String[] ListElemStr : GuiStaticVariables.listAllBlocksSketch) {
@@ -1615,7 +1616,7 @@ public class MkzEditModel extends EmptyForm {
             }
         }
     }
-    
+
     private void SetArticleLth(String tableName, String valueToSearch, JTextField artLthField) {
         DefaultTableModel tmp = new DefaultTableModel();
         String query = "select CODE from SAPX_" + tableName + " where NAME='" + valueToSearch + "'";
@@ -1634,20 +1635,20 @@ public class MkzEditModel extends EmptyForm {
             artLthField.setText("");
         }
     }
-    
+
     private void createCostRow(JPanel panel, ArrayList<JTextField> rowPanel, int curentCount, String units) {
-        
+
         JPanel tmpJPanel;
         String costElem[][] = {
             {"Расход " + units, "true"},
             {"Цена ($ " + units + " )", "true"},
             {"Итого стоимость", "false"}};
-        
+
         int tmpPos = (curentCount / CountInRow) + 1;
-        
+
         JLabel head = new JLabel("Расчет стоимости:");
         head.setFont(new Font("Arial", 1, (int) (12 * GuiStaticVariables.scaleHeight)));
-        
+
         panel.add(head,
                 new GridBagConstraints(0, tmpPos++, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 10), 0, 0));
 
@@ -1655,7 +1656,7 @@ public class MkzEditModel extends EmptyForm {
         for (int i = 0; i < costElem.length; i++) {
             tmpJPanel = CreateFormUtils.CreateElem(costElem[i][0], null, costElem[i][1]);
             rowPanel.add((JTextField) (tmpJPanel.getComponent(3)));
-            
+
             if (costElem[i][0].equals("Расход" + units) || costElem[i][0].equals("Цена ($ " + units + " )")) {
                 ((JTextField) (tmpJPanel.getComponent(3))).addCaretListener(new CaretListener() {
                     @Override
@@ -1671,10 +1672,10 @@ public class MkzEditModel extends EmptyForm {
                                 OutPutValue = Double.valueOf(OutGo.getText().replace(",", ".")) * Double.valueOf(Price.getText().replace(",", "."));
                                 Result.setText(String.valueOf(BigDecimal.valueOf(OutPutValue).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue()));
                             } catch (java.lang.NumberFormatException ex) {
-                                
+
                             }
                         }
-                        
+
                     }
                 });
             }
@@ -1683,5 +1684,5 @@ public class MkzEditModel extends EmptyForm {
             curentCount++;
         }
     }
-    
+
 }

@@ -10,6 +10,8 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.NewDataPanel;
+import my.guisap.componenst.fields.LoadImageField;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.CreateFormUtils;
 
 /**
@@ -47,9 +49,11 @@ public class AddSoleForm extends EmptyForm {
     }
 
     private void createFormFields() {
+        data.addLoadImageField(CacheImage.TYPE_SOLE, false);
+//        data.setCheckFields(true);
         pnlAttElem.add(data);
-        pnlAttElem.add(CreateFormUtils.CreateFieldDownloadImage());
         processing();
+
         pack();
         setCenter();
     }
@@ -80,6 +84,7 @@ public class AddSoleForm extends EmptyForm {
                 data.setText(1, data.getText(0) + "/" + tmp.getValueAt(0, 0));
             }
         });
+
     }
 
     @Override
@@ -102,6 +107,7 @@ public class AddSoleForm extends EmptyForm {
             } else if (field != null) {
                 field.setText(data.getText(0));
             }
+            data.getLoadImageField().saveImage(data.getText(0));
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.utils;
 
 import java.awt.Color;
@@ -33,6 +28,15 @@ public class TextUtils {
      */
     public static boolean checkRow(String nameTable, String value) {
         boolean result = false;
+
+        if (!nameTable.contains("SAPX_")) {
+            nameTable = "SAPX_" + nameTable;
+        }
+
+        if (nameTable.contains("LOCAL_")) {
+            return false;
+        }
+
         if (!value.equals("") && !value.equals(" ")) {
             if (!sql.checkInfo("select * from GUI_SAP." + nameTable + " where NAME='" + value + "'")) {
                 switch (nameTable) {

@@ -11,7 +11,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
+import my.guisap.componenst.MyImageCellRenderer;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.ImageUtils;
 
@@ -25,6 +27,7 @@ public class BottomDetails extends BInternalFrame {
     TableRowSorter<DefaultTableModel> sorterHeel;
     TableRowSorter<DefaultTableModel> sorterInsole;
 
+    int pictureColumn = 0;
     int indexColumn = 2;
 
     public BottomDetails() {
@@ -57,6 +60,19 @@ public class BottomDetails extends BInternalFrame {
 
         jTable1.setModel(tmpModel);
         sorterSole = new TableRowSorter<>(tmpModel);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                CacheImage.loadImageToTable(CacheImage.TYPE_SOLE, CacheImage.cacheSole, jTable1, 1, pictureColumn);
+            }
+        };
+        t.start();
+
+        jTable1.setDefaultRenderer(jTable1.getColumnClass(0),
+                new MyImageCellRenderer());
+        jTable1.setRowHeight(60);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
     }
 
     public void fillTableHeel() {
@@ -72,6 +88,19 @@ public class BottomDetails extends BInternalFrame {
         sql.tableFill(SqlOperations.HEEL_FULL_TABLE, tmpModel);
         jTable2.setModel(tmpModel);
         sorterHeel = new TableRowSorter<>(tmpModel);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                CacheImage.loadImageToTable(CacheImage.TYPE_HEEL, CacheImage.cacheHeel, jTable2, 1, pictureColumn);
+            }
+        };
+        t.start();
+
+        jTable2.setDefaultRenderer(jTable2.getColumnClass(0),
+                new MyImageCellRenderer());
+        jTable2.setRowHeight(60);
+        jTable2.getColumnModel().getColumn(0).setPreferredWidth(60);
     }
 
     public void fillTableInSole() {
@@ -167,8 +196,6 @@ public class BottomDetails extends BInternalFrame {
         jTable1.setCellSelectionEnabled(true);
         jTable1.setOpaque(false);
         jTable1.setUpdateSelectionOnSort(false);
-        jTable1.setRowHeight(180);
-        jTable1.getColumnModel().getColumn(0).setPreferredWidth(140);
 
         jButton1.setText("Добавить");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -281,7 +308,7 @@ public class BottomDetails extends BInternalFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
         jTable2.setAutoCreateRowSorter(true);
-        jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
+        //jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         jTable2.setCellSelectionEnabled(true);
         jTable2.setOpaque(false);
         jTable2.setUpdateSelectionOnSort(false);

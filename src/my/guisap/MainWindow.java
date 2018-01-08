@@ -67,6 +67,8 @@ public class MainWindow extends javax.swing.JFrame {
         //    connect = new ConnectionClass();
         loadConfig();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -422,7 +424,7 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem33ActionPerformed
 
     private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
-        fr.openForm(new UpdateForm(), FormRegister.SELECT_KEY_FORM);
+        fr.openForm(new UpdateForm(false), FormRegister.SELECT_KEY_FORM);
     }//GEN-LAST:event_jMenuItem34ActionPerformed
 
     private void jMenuItem35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem35ActionPerformed

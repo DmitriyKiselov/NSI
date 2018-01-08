@@ -3,14 +3,17 @@ package my.guisap.componenst;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import my.guisap.GuiStaticVariables;
 import my.guisap.componenst.fields.CatalogField;
 import my.guisap.componenst.fields.EntityForField;
 import my.guisap.componenst.fields.FreeWriteField;
+import my.guisap.componenst.fields.LoadImageField;
 import my.guisap.componenst.fields.SpinnerField;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CreateFormUtils;
@@ -45,6 +48,8 @@ public class NewDataPanel extends JPanel {
 
     boolean needToCheck = false;
     ArrayList<String> notCheckFields = new ArrayList<>();
+
+    LoadImageField loadImageField;
 
     public NewDataPanel(String nameTable, String nameFieldID, String nameForm, int columns) {
         this.nameTable = nameTable;
@@ -291,6 +296,7 @@ public class NewDataPanel extends JPanel {
         query.append(")");
 
         sql.SendQuery(query.toString());
+
         return true;
     }
 
@@ -387,6 +393,16 @@ public class NewDataPanel extends JPanel {
     public String generateNewID() {
         return sql.getObj("select NVL(max(TO_NUMBER(" + nameFieldID + ")),0)+1 from " + nameTable).toString();
     }
-    
+
+    public void addLoadImageField(String typeSave, boolean showImage) {
+
+        this.loadImageField = new LoadImageField(typeSave, showImage);
+        add(this.loadImageField);
+
+    }
+
+    public LoadImageField getLoadImageField() {
+        return this.loadImageField;
+    }
 
 }

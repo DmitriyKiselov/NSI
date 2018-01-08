@@ -3,6 +3,7 @@ package my.guisap.forms.UpDetails;
 import baseclass.BInternalFrame;
 import com.ezware.oxbow.swingbits.table.filter.TableRowFilterSupport;
 import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.ScrollPaneConstants;
@@ -10,7 +11,9 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
+import my.guisap.componenst.MyImageCellRenderer;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 
 /**
@@ -29,9 +32,29 @@ public class UpDetailsMain extends BInternalFrame {
     }
 
     public void fillTable() {
-        DefaultTableModel model = new DefaultTableModel();
+        DefaultTableModel model = new DefaultTableModel() {
+            @Override
+            public Class<?> getColumnClass(int column) {
+                if (column == 0) {
+                    return ImageIcon.class;
+                }
+                return super.getColumnClass(column);
+            }
+        };
         sql.tableFill(SqlOperations.UD_DETAILS_FULL_TABLE, model);
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                CacheImage.loadImageToTable(CacheImage.TYPE_UP, CacheImage.cacheUp, jTable1, 1, 0);
+            }
+        };
+        t.start();
         jTable1.setModel(model);
+        jTable1.setDefaultRenderer(jTable1.getColumnClass(0),
+                new MyImageCellRenderer());
+        jTable1.setRowHeight(60);
+        jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
     }
 
     @SuppressWarnings("unchecked")

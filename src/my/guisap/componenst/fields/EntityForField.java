@@ -22,7 +22,7 @@ public abstract class EntityForField extends JPanel {
 
     private JComponent field;
 
-    private String infoForLimitation;
+    private String infoForLimitation = "";
 
     public EntityForField(String nameForm, String nameCatalog, String nameField, String nameToSave, String discriptionField, String position, String block, String editable, String checked, String info) {
         this.nameForm = nameForm;

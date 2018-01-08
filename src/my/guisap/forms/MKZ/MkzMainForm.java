@@ -3,15 +3,12 @@ package my.guisap.forms.MKZ;
 import my.guisap.utils.SecurityManager;
 import baseclass.BInternalFrame;
 import com.ezware.oxbow.swingbits.table.filter.TableRowFilterSupport;
-import java.awt.Component;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +33,7 @@ import my.guisap.forms.ImageForm;
 import my.guisap.forms.LifeLineForm;
 import my.guisap.forms.RejectForm;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.ImageUtils;
 import my.guisap.utils.LifeLineUtils;
@@ -66,6 +64,7 @@ public class MkzMainForm extends BInternalFrame {
 
     int numberColumnStatus = 15;
     int numberColumnIndex = 2;
+    int numberColumnPicture = 1;
 
     public MkzMainForm() {
         setName("МКЗ");
@@ -129,7 +128,7 @@ public class MkzMainForm extends BInternalFrame {
                     data[i][FirstElem + j] = "";
                 }
             }
-            data[i][0] = new Boolean(false);
+            data[i][0] = false;
         }
 
         OutTable = new DefaultTableModel(data, columnNames) {
@@ -144,15 +143,6 @@ public class MkzMainForm extends BInternalFrame {
             }
         };
 
-        //подгружаем картинки в другом потоке
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                createMapFiles();
-            }
-        };
-        t.start();
-
         jTable2.setModel(OutTable);
 
         jTable2.getColumnModel()
@@ -164,6 +154,14 @@ public class MkzMainForm extends BInternalFrame {
 
         sorter = new TableRowSorter<>(OutTable);
 
+        //подгружаем картинки в другом потоке
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                CacheImage.loadImageToTable(CacheImage.TYPE_MKZ, CacheImage.cacheModel, jTable2, numberColumnIndex, numberColumnPicture);
+            }
+        };
+        t.start();
     }
 
     @SuppressWarnings("unchecked")
@@ -199,8 +197,6 @@ public class MkzMainForm extends BInternalFrame {
         jButton9 = ComponentsUtils.createBtn("Редактировать колодку",150,25,true);
         jButton10 = ComponentsUtils.createBtn("Редактировать колодку",150,25,true);
         jCheckBox1 = new javax.swing.JCheckBox();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jCheckBox2 = new javax.swing.JCheckBox();
         jButton11 = ComponentsUtils.createBtn("",160,25,true);
         jMenuBar1 = new javax.swing.JMenuBar();
@@ -361,12 +357,6 @@ public class MkzMainForm extends BInternalFrame {
             }
         });
 
-        jLabel2.setFont(GuiStaticVariables.globalFont);
-        jLabel2.setText("Загружено 0 из ");
-
-        jLabel3.setFont(GuiStaticVariables.globalFont);
-        jLabel3.setText("0");
-
         jCheckBox2.setFont(GuiStaticVariables.globalFont);
         jCheckBox2.setText("Только мои записи");
         jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
@@ -477,10 +467,6 @@ public class MkzMainForm extends BInternalFrame {
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -505,15 +491,13 @@ public class MkzMainForm extends BInternalFrame {
                         .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2)
-                        .addComponent(jLabel3)
                         .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(checkbox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -829,65 +813,6 @@ public class MkzMainForm extends BInternalFrame {
         jTable2.add(popupmenu);
     }
 
-    public void createMapFiles() {
-
-        jLabel2.setVisible(true);
-        jLabel3.setVisible(true);
-
-        File F = new File(GuiStaticVariables.DEF_PICTURESICONS_PATH);
-
-        FilenameFilter imageFilter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                return lowercaseName.endsWith(".jpg");
-            }
-        };
-
-        String[] nameList = F.list(imageFilter);
-        File[] fileList = F.listFiles(imageFilter);
-
-        jLabel3.setText("из " + nameList.length + " фото");
-
-        for (int i = 0; i < nameList.length; i++) {
-            fileMap.put(nameList[i], fileList[i].toString());
-        }
-
-        if (ImageUtils.cacheImageMap.isEmpty()) {
-            for (int i = 0; i < OutTable.getRowCount(); i++) {
-                try {
-                    ImageIcon image = new ImageIcon(fileMap.get(OutTable.getValueAt(i, numberColumnIndex).toString() + ".jpg"));
-                    OutTable.setValueAt(image, i, 1);
-                    ImageUtils.cacheImageMap.put(OutTable.getValueAt(i, numberColumnIndex).toString(), image);
-                    jLabel2.setText("Загружено " + i);
-                } catch (NullPointerException ex) {
-
-                }
-            }
-        } else {
-            for (int i = 0; i < OutTable.getRowCount(); i++) {
-                try {
-                    ImageIcon image = ImageUtils.cacheImageMap.get(OutTable.getValueAt(i, numberColumnIndex).toString());
-                    if (image == null) {
-                        image = new ImageIcon(GuiStaticVariables.DEF_PICTURESICONS_PATH + "" + GuiStaticVariables.SEPARATOR + "" + OutTable.getValueAt(i, numberColumnIndex).toString() + ".jpg");
-                        ImageUtils.cacheImageMap.put(OutTable.getValueAt(i, numberColumnIndex).toString(), image);
-                    }
-                    OutTable.setValueAt(image, i, 1);
-                    jLabel2.setText("Загружено " + i);
-                } catch (NullPointerException ex) {
-
-                }
-            }
-        }
-
-        jLabel2.setVisible(
-                false);
-        jLabel3.setVisible(
-                false);
-
-    }
-
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox checkbox1;
     private javax.swing.JButton jButton1;
@@ -904,8 +829,6 @@ public class MkzMainForm extends BInternalFrame {
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;

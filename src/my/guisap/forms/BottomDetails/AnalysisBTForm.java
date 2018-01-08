@@ -1,15 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.forms.BottomDetails;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -21,9 +14,9 @@ import my.guisap.GuiStaticVariables;
 import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.MyImageCellRenderer;
 import my.guisap.forms.MKZ.MkzEditModel;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.CreateFormUtils;
-import my.guisap.utils.ImageUtils;
 
 /**
  *
@@ -36,6 +29,8 @@ public class AnalysisBTForm extends EmptyForm {
     Map<String, String> fileMap = new HashMap<>();
     DefaultTableModel models;
     int numberColumnIndex = 1;
+
+    JTable jTable;
 
     public AnalysisBTForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, String fason, String table) {
         super(caption, classFlag, needToSave, needSaveSize);
@@ -74,84 +69,47 @@ public class AnalysisBTForm extends EmptyForm {
 
             if (models.getRowCount() > 0) {
 
-                JTable tmpTable = new JTable() {
+                jTable = new JTable() {
                     @Override
                     public boolean isCellEditable(int arg0, int arg1) {
                         return false;
                     }
                 };
 
-                tmpTable.addMouseListener(new java.awt.event.MouseAdapter() {
+                jTable.addMouseListener(new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseClicked(java.awt.event.MouseEvent evt) {
-                        jTableMouseClicked(evt, tmpTable);
+                        jTableMouseClicked(evt, jTable);
                     }
                 });
 
-                tmpTable.setCellSelectionEnabled(true);
-                tmpTable.setModel(models);
-                tmpTable.setDefaultRenderer(tmpTable.getColumnClass(0),
+                jTable.setCellSelectionEnabled(true);
+                jTable.setModel(models);
+                jTable.setDefaultRenderer(jTable.getColumnClass(0),
                         new MyImageCellRenderer());
-                tmpTable.setRowHeight(80);
-                tmpTable.getColumnModel().getColumn(1).setPreferredWidth(40);
+                jTable.setRowHeight(80);
+                jTable.getColumnModel().getColumn(1).setPreferredWidth(40);
 
-                panel.add(tmpTable, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+                Thread t = new Thread() {
+                    @Override
+                    public void run() {
+                        CacheImage.loadImageToTable(CacheImage.TYPE_MKZ, CacheImage.cacheModel, jTable, 1, 0);
+                    }
+                };
+                t.start();
+
+                panel.add(jTable, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+
             } else {
                 panel.add(ComponentsUtils.createLabel("Модели на данном артикуле отсутствуют"), new GridBagConstraints(0, 1, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
             }
             panel.setBorder(CreateFormUtils.defaultBorder);
             pnlAttElem.add(panel);
-            createMapFiles();
+
         }
 
         pack();
         setCenter();
-
-    }
-
-    public void createMapFiles() {
-
-        File F = new File(GuiStaticVariables.DEF_PICTURESICONS_PATH);
-
-        FilenameFilter imageFilter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                return lowercaseName.endsWith(".jpg");
-            }
-        };
-
-        String[] nameList = F.list(imageFilter);
-        File[] fileList = F.listFiles(imageFilter);
-
-        for (int i = 0; i < nameList.length; i++) {
-            fileMap.put(nameList[i], fileList[i].toString());
-        }
-
-        if (ImageUtils.cacheImageMap.isEmpty()) {
-            for (int i = 0; i < models.getRowCount(); i++) {
-                try {
-                    ImageIcon image = new ImageIcon(fileMap.get(models.getValueAt(i, numberColumnIndex).toString() + ".jpg"));
-                    models.setValueAt(image, i, 0);
-                    ImageUtils.cacheImageMap.put(models.getValueAt(i, numberColumnIndex).toString(), image);
-                } catch (NullPointerException ex) {
-
-                }
-            }
-        } else {
-            for (int i = 0; i < models.getRowCount(); i++) {
-                try {
-                    ImageIcon image = ImageUtils.cacheImageMap.get(models.getValueAt(i, numberColumnIndex).toString());
-                    if (image == null) {
-                        image = new ImageIcon(GuiStaticVariables.DEF_PICTURESICONS_PATH + "" + GuiStaticVariables.SEPARATOR + "" + models.getValueAt(i, numberColumnIndex).toString() + ".jpg");
-                        ImageUtils.cacheImageMap.put(models.getValueAt(i, numberColumnIndex).toString(), image);
-                    }
-                    models.setValueAt(image, i, 0);
-                } catch (NullPointerException ex) {
-
-                }
-            }
-        }
 
     }
 

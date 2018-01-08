@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JWindow;
+import javax.swing.SwingUtilities;
 import my.guisap.GuiStaticVariables;
 
 /**
@@ -30,5 +31,14 @@ public class ProgressMessage extends JWindow {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    public void changeMessage(String message) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                label.setText(message);
+            }
+        });
     }
 }

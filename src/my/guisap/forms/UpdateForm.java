@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.forms;
 
 import my.guisap.componenst.EmptyForm;
@@ -20,7 +15,6 @@ import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.swing.BorderFactory;
-import javax.swing.JDesktopPane;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -36,22 +30,24 @@ import my.guisap.componenst.ProgressMessage;
  */
 public class UpdateForm extends EmptyForm {
 
-    public UpdateForm() {
+    ProgressMessage pm;
+
+    public UpdateForm(boolean needCheck) {
         super("Обновление", "updateForm", false, false);
+
+        if (needCheck) {
+            if (getActualVersion()) {
+
+            } else {
+                super.closeWindow();
+            }
+        }
+
         lblHeader.setText("Обновление не требуется");
         saveButt.setText("Обновить");
         saveButt.setEnabled(false);
         getActualVersion();
         render();
-    }
-
-    public UpdateForm(JDesktopPane pane) {
-        super("Обновление", "updateForm", false, false);
-        if (getActualVersion()) {
-            JOptionPane.showMessageDialog(this, "Доступна новая версия программы, обновитесь пожалуйста (Сервис -> Обновление)", "Предупреждение", JOptionPane.WARNING_MESSAGE);
-        } else {
-            super.closeWindow();
-        }
     }
 
     private void render() {
@@ -84,7 +80,7 @@ public class UpdateForm extends EmptyForm {
             JOptionPane.showMessageDialog(this, "Не удается проверить версию", "Предупреждение", JOptionPane.WARNING_MESSAGE);
         }
         if (!GuiStaticVariables.ACTUALVERSIONAPP.equals(GuiStaticVariables.VERSIONAPP)) {
-            lblHeader.setText("Обновите программу");
+            lblHeader.setText("Доступно обновление программы");
             saveButt.setEnabled(true);
             return true;
         }
@@ -101,7 +97,7 @@ public class UpdateForm extends EmptyForm {
             dstDir.mkdir();
         }
 
-        final ProgressMessage pm = new ProgressMessage("Пожалуйста, подождите! Идет загрузка...");
+        pm = new ProgressMessage("Пожалуйста, подождите! Идет загрузка.");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -136,7 +132,9 @@ public class UpdateForm extends EmptyForm {
                         zipEntry = zInputStream.getNextEntry();
                     }
 
-                    JOptionPane.showMessageDialog(null, "Загруженна актуальная версия", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    pm.setVisible(false);
+                    pm.dispose();
+                    JOptionPane.showMessageDialog(null, "Загруженна актуальная версия, требуется перезапуск программы", "Информация", JOptionPane.INFORMATION_MESSAGE);
 
                     //запуск обновленной программы
                     ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", "java -jar", "GUI_Sap.jar");
@@ -150,13 +148,16 @@ public class UpdateForm extends EmptyForm {
                     JOptionPane.showMessageDialog(null, "Ошибка при обновлении", "Ошибка", JOptionPane.ERROR);
                     Logger.getLogger(UpdateForm.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                pm.setVisible(false);
-                pm.dispose();
+
             }
         });
+
+//            }
+//        });
     }
 
     @Override
+
     public void saveActionPerformed(ActionEvent evt) {
         update();
     }

@@ -92,7 +92,7 @@ public class CatalogForm extends javax.swing.JDialog {
                 break;
         }
 
-        signsFormation(field.getNameCatalog(), field.getDiscriptionField());
+        signsFormation(field.getNameCatalog(), field.getNameField());
 
         jTextField2.requestFocus();
         setVisible(true);
@@ -102,6 +102,8 @@ public class CatalogForm extends javax.swing.JDialog {
     }
 
     private void signsFormation(String atprt, String atnam) {
+
+        System.out.println(atprt + " " + atnam);
 
         jTable1.setModel(guideModelLocal);
         jTable1.getTableHeader().setReorderingAllowed(false);
@@ -193,7 +195,7 @@ public class CatalogForm extends javax.swing.JDialog {
                     }
                     sql.tableFill("select * from (" + SqlOperations.SELECT_FOR_CATALOG_FORM + atprt + " a order BY lpad(a.CODE, 50)) " + SqlOperations.UNION_REQUEST_SAPX + "ATBEZ='" + atbez + "'", guideModelSap);
                 }
-                
+
                 if ((atprt.charAt(atprt.length() - 1) == 'L' && atprt.charAt(atprt.length() - 2) == '_') || (atprt.contains("LOCAL_"))) {
                     jButton3.setText("Добавить в локальный справочник");
                     typeSave = 4;

@@ -10,10 +10,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
 import my.guisap.GuiStaticVariables;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
+import my.guisap.utils.CreateFormUtils;
 import my.guisap.utils.ImageUtils;
 
 /**
@@ -22,20 +23,15 @@ import my.guisap.utils.ImageUtils;
  */
 public class LoadImageField extends JPanel {
 
-    public static int TYPE_MKZ = 1;
-    public static int TYPE_SOLE = 2;
-    public static int TYPE_HEEL = 3;
-    public static int TYPE_UP = 4;
-
     private JTextField pathField;
-    private JButton button;
+    private final JButton button;
     private File fileToSave;
     private Image image;
-    private int typeSave;
+    private final String typeSave;
 
     SqlOperations sql = new SqlOperations();
 
-    public LoadImageField(int typeSave, boolean showImage) {
+    public LoadImageField(String typeSave, boolean showImage) {
 
         this.typeSave = typeSave;
 
@@ -44,7 +40,7 @@ public class LoadImageField extends JPanel {
 
         button.addActionListener((ActionEvent ae) -> {
             FileDialog fd = new FileDialog(new Frame(), "Выберите файл", FileDialog.LOAD);
-            fd.setFile("*.jpg;*.gif;*png");
+            fd.setFile("*.jpg;*.jpeg;*.gif;*png");
             fd.setVisible(true);
             String filename = fd.getFile();
             if (filename == null) {
@@ -61,14 +57,14 @@ public class LoadImageField extends JPanel {
         super.add(Box.createHorizontalStrut(GuiStaticVariables.TIGHTLE_STRUT));
         super.add(pathField);
         super.add(button);
+        super.setBorder(CreateFormUtils.defaultBorder);
     }
 
     public void saveImage(String nameToSave) {
         if (fileToSave != null) {
-            DefaultTableModel pathModel = new DefaultTableModel();
-            sql.tableFill("SELECT PATH FROM PATH_TABLE WHERE ID=" + typeSave, pathModel);
-            if (pathModel.getRowCount() == 2) {
-                ImageUtils.saveImage(fileToSave, (String) pathModel.getValueAt(0, 0), (String) pathModel.getValueAt(0, 1), nameToSave);
+            String path = CacheImage.cachePath.get(typeSave);
+            if (path != null) {
+                ImageUtils.saveImage(fileToSave, path, path + "/icons", nameToSave, CacheImage.getMapByType(typeSave));
             }
         }
     }

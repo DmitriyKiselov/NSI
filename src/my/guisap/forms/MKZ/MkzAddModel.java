@@ -22,6 +22,7 @@ import my.guisap.GuiStaticVariables;
 import my.guisap.attributeRow;
 import my.guisap.forms.Last.RequestLastForm;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.CreateFormUtils;
 import my.guisap.utils.ImageUtils;
@@ -382,7 +383,7 @@ public class MkzAddModel extends EmptyForm {
         log.logWriting(AddQuery);
 
         if (!pathFile.getText().equals("")) {
-            ImageUtils.saveImage(imageModel, GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model);
+            ImageUtils.saveImage(imageModel, GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model, CacheImage.cacheModel);
         }
 
         this.closeWindow();

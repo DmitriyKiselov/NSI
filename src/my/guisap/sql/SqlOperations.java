@@ -185,9 +185,15 @@ public class SqlOperations {
     private ResultSet rs;
     private JTable table = new JTable();
     ConnectionClass connect;
+    
+    public static final SqlOperations sql = new SqlOperations();
 
     public SqlOperations() {
+        
     }
+    
+    
+    
 
     public int dataUpdate(String query) {
         return dataUpdate_1(query, 0);

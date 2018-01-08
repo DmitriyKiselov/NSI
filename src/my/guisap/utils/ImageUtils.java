@@ -29,13 +29,11 @@ import my.guisap.MainClass;
  */
 public class ImageUtils {
 
-    public static Map<String, ImageIcon> cacheImageMap = new HashMap<String, ImageIcon>();
-
     public ImageUtils() {
 
     }
 
-    public static void CreateAndSaveIcon(File in, File out, String model) {
+    public static void CreateAndSaveIcon(File in, File out, String model, Map<String, ImageIcon> map) {
         BufferedImage image;
         try {
             image = ImageIO.read(in);
@@ -61,28 +59,28 @@ public class ImageUtils {
             bGr.drawImage(image, 0, 0, width, height, null);
             bGr.dispose();
             ImageIO.write(newImage, "jpg", out);
-            cacheImageMap.put(model, new ImageIcon(newImage));
+            map.put(model, new ImageIcon(newImage));
         } catch (IOException ex) {
             Logger.getLogger(ImageUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public static void openSaveImageDialog(String path, String iconPath, String model) {
+    public static void openSaveImageDialog(String path, String iconPath, String model, Map<String, ImageIcon> map) {
         FileDialog fd = new FileDialog(new Frame(), "Выберите файл", FileDialog.LOAD);
         fd.setFile("*.jpg;*.gif;*png");
         fd.setVisible(true);
         if (fd.getFiles()[0].toPath() != null) {
-            saveImage(fd.getFiles()[0], path, iconPath, model);
+            saveImage(fd.getFiles()[0], path, iconPath, model, map);
         }
     }
 
-    public static void saveImage(File fileImage, String path, String iconPath, String nameToSave) {
+    public static void saveImage(File fileImage, String path, String iconPath, String nameToSave, Map<String, ImageIcon> map) {
         try {
             //основной файл (путь к нему)
             File newFile = new File(path + GuiStaticVariables.SEPARATOR + nameToSave + ".jpg");
             //файл иконки (путь к нему)
             File newFileIcon = new File(iconPath + GuiStaticVariables.SEPARATOR + nameToSave + ".jpg");
-            ImageUtils.CreateAndSaveIcon(fileImage, newFileIcon, nameToSave);
+            ImageUtils.CreateAndSaveIcon(fileImage, newFileIcon, nameToSave, map);
 
             newFile.delete();
             Files.copy(fileImage.toPath(), newFile.toPath());
@@ -112,7 +110,4 @@ public class ImageUtils {
         return icon;
     }
 
-    public static void clearCache() {
-        cacheImageMap.clear();
-    }
 }
