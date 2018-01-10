@@ -3,13 +3,11 @@ package my.guisap.componenst;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import my.guisap.GuiStaticVariables;
 import my.guisap.componenst.fields.CatalogField;
 import my.guisap.componenst.fields.EntityForField;
 import my.guisap.componenst.fields.FreeWriteField;
@@ -50,6 +48,7 @@ public class NewDataPanel extends JPanel {
     ArrayList<String> notCheckFields = new ArrayList<>();
 
     LoadImageField loadImageField;
+    int numberFieldName;
 
     public NewDataPanel(String nameTable, String nameFieldID, String nameForm, int columns) {
         this.nameTable = nameTable;
@@ -240,6 +239,12 @@ public class NewDataPanel extends JPanel {
         }
     }
 
+    public void blockFields() {
+        for (EntityForField field : listFields) {
+            field.setEnabledComponent(false);
+        }
+    }
+
     public boolean fillFields(String query, int startValue) {
         DefaultTableModel tmp = new DefaultTableModel();
         sql.tableFill(query, tmp);
@@ -296,6 +301,8 @@ public class NewDataPanel extends JPanel {
         query.append(")");
 
         sql.SendQuery(query.toString());
+        log.logWriting("Добавлена запись: " + getText(0) + " в таблицу: " + nameTable);
+        saveImage();
 
         return true;
     }
@@ -328,7 +335,10 @@ public class NewDataPanel extends JPanel {
         }
 
         query.append(")");
+
         sql.SendQuery(query.toString());
+        log.logWriting("Добавлена запись: " + getText(0) + " в таблицу: " + nameTable);
+        saveImage();
         return true;
     }
 
@@ -343,7 +353,9 @@ public class NewDataPanel extends JPanel {
         query.append(" where ").append(nameFieldID).append("=").append(id).append("");
 
         sql.SendQuery(query.toString());
-        log.logWriting("Внесены изменения в запись: '" + id + "' таблицы: " + nameTable);
+        log.logWriting("Внесены изменения в запись: " + getText(0) + " таблицы: " + nameTable);
+        saveImage();
+
         return true;
     }
 
@@ -394,15 +406,22 @@ public class NewDataPanel extends JPanel {
         return sql.getObj("select NVL(max(TO_NUMBER(" + nameFieldID + ")),0)+1 from " + nameTable).toString();
     }
 
-    public void addLoadImageField(String typeSave, boolean showImage) {
+    public void addLoadImageField(String typeSave, boolean showImage, int numberFieldName) {
 
         this.loadImageField = new LoadImageField(typeSave, showImage);
+        this.numberFieldName = numberFieldName;
         add(this.loadImageField);
 
     }
 
     public LoadImageField getLoadImageField() {
         return this.loadImageField;
+    }
+
+    private void saveImage() {
+        if (loadImageField != null) {
+            getLoadImageField().saveImage(getText(numberFieldName));
+        }
     }
 
 }

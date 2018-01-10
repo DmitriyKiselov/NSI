@@ -12,6 +12,7 @@ import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
 import my.guisap.componenst.MyImageCellRenderer;
+import my.guisap.forms.SingleImageForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
@@ -191,6 +192,11 @@ public class BottomDetails extends BInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setCellSelectionEnabled(true);
@@ -306,6 +312,11 @@ public class BottomDetails extends BInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable2MouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTable2);
         jTable2.setAutoCreateRowSorter(true);
         //jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -554,19 +565,19 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", true, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        fr.openForm(new AddHeelForm("Каблук", "Heel", true, false, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddHeelForm("Каблук", true, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
-        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, false, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddInsoleForm("Основная стелька", true, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        fr.openForm(new AddSoleForm("Подошва", "Sole", true, false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddSoleForm("Подошва", true, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString(), true), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -578,8 +589,34 @@ public class BottomDetails extends BInternalFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        fr.openForm(new AddHeelForm("Каблук", "Heel", true, false, this, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddHeelForm("Каблук", false, this, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString(), true), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if (evt.getClickCount() == 2) {
+            switch (jTable1.getSelectedColumn()) {
+                case 0:
+                    fr.openForm(new SingleImageForm(CacheImage.cachePath.get(CacheImage.TYPE_SOLE), jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString()), FormRegister.SOME_KEY_FORM);
+                    break;
+                default:
+                    fr.openForm(new AddSoleForm("Подошва", true, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString(), false), FormRegister.SOME_KEY_FORM);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
+        if (evt.getClickCount() == 2) {
+            switch (jTable2.getSelectedColumn()) {
+                case 0:
+                    fr.openForm(new SingleImageForm(CacheImage.cachePath.get(CacheImage.TYPE_HEEL), jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString()), FormRegister.SOME_KEY_FORM);
+                    break;
+                default:
+                    fr.openForm(new AddHeelForm("Каблук", false, this, jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString(), false), FormRegister.SOME_KEY_FORM);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_jTable2MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

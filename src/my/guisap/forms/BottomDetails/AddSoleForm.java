@@ -2,64 +2,71 @@ package my.guisap.forms.BottomDetails;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
-import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.NewDataPanel;
-import my.guisap.componenst.fields.LoadImageField;
+import my.guisap.componenst.SaveForm;
 import my.guisap.utils.CacheImage;
-import my.guisap.utils.CreateFormUtils;
 
 /**
  *
  * @author KiselevDA
  */
-public class AddSoleForm extends EmptyForm {
-
-    NewDataPanel data = new NewDataPanel("LB_SOLE", "ID", "AddSoleForm", 1);
-//    DataPanel data = new DataPanel("LB_SOLE", "ID", 1);
+public class AddSoleForm extends SaveForm {
 
     JTextField field;
     BottomDetails parentForm;
 
+    NewDataPanel data = new NewDataPanel("LB_SOLE", "ID", "AddSoleForm", 1);
+
     String art = "";
 
-    public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    boolean newOn;
+
+    public AddSoleForm(String caption, boolean needToSave, BottomDetails parentForm) {
+        super(caption, needToSave);
+
         this.parentForm = parentForm;
-        createFormFields();
+        createFormFields(true);
     }
 
-    public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm, String art) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    public AddSoleForm(String caption, boolean needToSave, BottomDetails parentForm, String art, boolean newOn) {
+        super(caption, needToSave);
         this.parentForm = parentForm;
-        createFormFields();
+        this.newOn = newOn;
+        createFormFields(newOn);
         this.art = art;
         fillFields();
     }
 
-    public AddSoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, JTextField field) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    public AddSoleForm(String caption, boolean needToSave, JTextField field) {
+        super(caption, needToSave);
         this.field = field;
-        createFormFields();
+        createFormFields(true);
     }
 
-    private void createFormFields() {
-        data.addLoadImageField(CacheImage.TYPE_SOLE, false);
+    private void createFormFields(boolean addProcessing) {
+        data.addLoadImageField(CacheImage.TYPE_SOLE, false, 0);
 //        data.setCheckFields(true);
-        pnlAttElem.add(data);
-        processing();
+        contentPanel.add(data);
+
+        if (addProcessing) {
+            processing();
+        }
 
         pack();
         setCenter();
     }
 
-    private void fillFields() {
+    @Override
+    public void fillFields() {
         data.fillFields("SELECT * FROM LB_SOLE " + " where ART='" + art + "'", 1);
+        if (!newOn) {
+            data.blockFields(new int[]{0, 1});
+        }
     }
 
     private void processing() {
@@ -84,7 +91,6 @@ public class AddSoleForm extends EmptyForm {
                 data.setText(1, data.getText(0) + "/" + tmp.getValueAt(0, 0));
             }
         });
-
     }
 
     @Override
@@ -101,13 +107,18 @@ public class AddSoleForm extends EmptyForm {
             extraFields[0] = "R";
         }
 
-        if (data.saveToDB(data.generateID, extraFields)) {
+        if (!newOn) {
+            String id = (String) sql.getObj("SELECT ID FROM LB_SOLE " + " where ART='" + art + "'");
+            if (data.updateDB(id, null)) {
+                parentForm.fillTableHeel();
+                this.closeWindow();
+            }
+        } else if (data.saveToDB(data.generateID, extraFields)) {
             if (parentForm != null) {
                 parentForm.fillTableSole();
             } else if (field != null) {
                 field.setText(data.getText(0));
             }
-            data.getLoadImageField().saveImage(data.getText(0));
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);

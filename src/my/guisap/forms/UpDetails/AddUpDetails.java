@@ -1,21 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap.forms.UpDetails;
 
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
-import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.NewDataPanel;
+import my.guisap.componenst.SaveForm;
 import my.guisap.utils.CacheImage;
 
 /**
  *
  * @author KiselevDA
  */
-public class AddUpDetails extends EmptyForm {
+public class AddUpDetails extends SaveForm {
 
     NewDataPanel data = new NewDataPanel("LB_UP_DETAILS", "ID", "AddUpDetails", 1);
     StringBuilder generateIndex = new StringBuilder("0000A00/0");
@@ -23,32 +18,41 @@ public class AddUpDetails extends EmptyForm {
     UpDetailsMain parentForm;
     String index = "";
 
-    public AddUpDetails(String caption, String classFlag, boolean needToSave, boolean needSaveSize, UpDetailsMain parentForm) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    boolean newOn;
+
+    public AddUpDetails(String caption, boolean needToSave, UpDetailsMain parentForm) {
+        super(caption, needToSave);
         this.parentForm = parentForm;
-        createFormFields();
+        createFormFields(true);
 
     }
 
-    public AddUpDetails(String caption, String classFlag, boolean needToSave, boolean needSaveSize, UpDetailsMain parentForm, String index) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    public AddUpDetails(String caption, boolean needToSave, UpDetailsMain parentForm, String index, boolean newOn) {
+        super(caption, needToSave);
         this.parentForm = parentForm;
         this.index = index;
-        createFormFields();
+        this.newOn = newOn;
+        createFormFields(newOn);
         fillFields();
     }
 
-    private void createFormFields() {
-        data.addLoadImageField(CacheImage.TYPE_UP, false);
+    private void createFormFields(boolean addProcessing) {
+        data.addLoadImageField(CacheImage.TYPE_UP, false, 0);
         data.setCheckFields(true);
-        pnlAttElem.add(data);
-        processing();
+        contentPanel.add(data);
+        if (addProcessing) {
+            processing();
+        }
         pack();
         setCenter();
     }
 
-    private void fillFields() {
+    @Override
+    public void fillFields() {
         data.fillFields("SELECT * FROM LB_UP_DETAILS " + " where INDEX_UP='" + index + "'", 1);
+        if (!newOn) {
+            data.blockFields(new int[]{0, 1, 2, 3, 4, 5, 6});
+        }
     }
 
     private void processing() {
@@ -71,11 +75,11 @@ public class AddUpDetails extends EmptyForm {
             generateIndex.setCharAt(3, tmp.charAt(0));
             generateIndex();
         });
-//        data.getTextField(5).addCaretListener((ce) -> {
-//            String tmp = data.getCode(4);
-//            generateIndex.setCharAt(3, tmp.charAt(0));
-//            generateIndex();
-//        });
+        data.getTextField(5).addCaretListener((ce) -> {
+            String tmp = data.getCode(5);
+            
+            generateIndex();
+        });
         data.getTextField(6).addCaretListener((ce) -> {
             String tmp = data.getCode(6);
             if (tmp.length() < 2) {
@@ -106,12 +110,16 @@ public class AddUpDetails extends EmptyForm {
         } else {
             extraFields[0] = "R";
         }
-
-        if (data.saveToDB(data.generateID, extraFields)) {
+        if (!newOn) {
+            String id = (String) sql.getObj("SELECT ID FROM LB_UP_DETAILS where" + " INDEX_UP='" + index + "'");
+            if (data.updateDB(id, null)) {
+                parentForm.fillTable();
+                this.closeWindow();
+            }
+        } else if (data.saveToDB(data.generateID, extraFields)) {
             if (parentForm != null) {
                 parentForm.fillTable();
             }
-            data.getLoadImageField().saveImage(data.getText(0));
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);

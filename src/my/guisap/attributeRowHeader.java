@@ -6,7 +6,6 @@ package my.guisap;
 
 import my.guisap.componenst.AttributePanel;
 import my.guisap.utils.LogClass;
-import my.guisap.forms.ModelForm;
 import my.guisap.componenst.EmptyForm;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -114,17 +113,13 @@ public class attributeRowHeader extends attributeRow {
                     dataHeaderModel = new DefaultTableModel(0, 0);
                     sql.tableFill(SqlOperations.MODEL_HEADER + " where a.CODE = '" + txt.getText() + "'", dataHeaderModel);
 
-                    ModelForm mf = (ModelForm) this.form;
 //                mf.sizeLblUpdate();
-                    mf.txtUpdate();
                     log.logWriting("импортировал признаки по модели " + txt.getText() + " из таблиц HISTORY базы SAP");
 
                     return true;
                 }
 
-                ModelForm mf = (ModelForm) this.form;
 //                mf.sizeLblUpdate();
-                mf.txtUpdate();
             }
 
             if (atnam.equals(GuiStaticVariables.ARTICLE_ATNAM)) {
@@ -178,9 +173,6 @@ public class attributeRowHeader extends attributeRow {
                 ef.saveLblUpdating();
 
                 if (atnam.equals(GuiStaticVariables.MODEL_ATNAM)) {
-                    ModelForm mf = (ModelForm) this.form;
-//                    mf.sizeLblUpdate();
-                    mf.txtUpdate();
                 }
 
                 return true;

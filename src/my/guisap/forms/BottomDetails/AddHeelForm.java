@@ -12,9 +12,8 @@ import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
-import my.guisap.componenst.EmptyForm;
 import my.guisap.componenst.NewDataPanel;
-import my.guisap.componenst.fields.LoadImageField;
+import my.guisap.componenst.SaveForm;
 import my.guisap.utils.CacheImage;
 import my.guisap.utils.SecurityManager;
 
@@ -22,50 +21,60 @@ import my.guisap.utils.SecurityManager;
  *
  * @author KiselevDA
  */
-public class AddHeelForm extends EmptyForm {
-    
-    NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
-//    DataPanel data = new DataPanel("LB_HEEL", "NAME", 1);
+public class AddHeelForm extends SaveForm {
 
     JTextField field;
     BottomDetails parentForm;
     
+    NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
+
     String art = "";
-    
-    public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm) {
-        super(caption, classFlag, needToSave, needSaveSize);
+
+    boolean newOn;
+
+    public AddHeelForm(String caption, boolean needToSave, BottomDetails parentForm) {
+        super(caption, needToSave);
         this.parentForm = parentForm;
-        createFormFields();
+        createFormFields(true);
     }
-    
-    public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm, String art) {
-        super(caption, classFlag, needToSave, needSaveSize);
+
+    public AddHeelForm(String caption, boolean needToSave, BottomDetails parentForm, String art, boolean newOn) {
+        super(caption, needToSave);
         this.parentForm = parentForm;
-        createFormFields();
+        this.newOn = newOn;
+        createFormFields(newOn);
+
         this.art = art;
         fillFields();
     }
-    
-    public AddHeelForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, JTextField field) {
-        super(caption, classFlag, needToSave, needSaveSize);
+
+    public AddHeelForm(String caption, boolean needToSave, JTextField field) {
+        super(caption, needToSave);
         this.field = field;
-        createFormFields();
+        createFormFields(newOn);
     }
-    
-    private void createFormFields() {
-        data.addLoadImageField(CacheImage.TYPE_HEEL, false);
+
+    private void createFormFields(boolean addProcessing) {
+        data.addLoadImageField(CacheImage.TYPE_HEEL, false, 0);
 //        data.setCheckFields(true);
-        pnlAttElem.add(data);
-        
-        processing();
+        contentPanel.add(data);
+
+        if (addProcessing) {
+            processing();
+        }
+
         pack();
         setCenter();
     }
-    
-    private void fillFields() {
+
+    @Override
+    public void fillFields() {
         data.fillFields("SELECT * FROM LB_HEEL " + " where ART='" + art + "'", 1);
+        if (!newOn) {
+            data.blockFields(new int[]{0, 1});
+        }
     }
-    
+
     private void processing() {
         JTextField tmpField = (JTextField) data.getTextField(0);
         tmpField.addCaretListener(new CaretListener() {
@@ -75,12 +84,12 @@ public class AddHeelForm extends EmptyForm {
             }
         });
         tmpField.setEnabled(true);
-        
+
         data.getTextField(0).addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent fe) {
             }
-            
+
             @Override
             public void focusLost(FocusEvent fe) {
                 DefaultTableModel tmp = new DefaultTableModel();
@@ -89,33 +98,36 @@ public class AddHeelForm extends EmptyForm {
             }
         });
     }
-    
+
     @Override
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
         saveToDB();
     }
-    
+
     private void saveToDB() {
         String[] extraFields = new String[1];
-        
+
         if (SecurityManager.idGroup == 1) {
             extraFields[0] = "NS";
         } else {
             extraFields[0] = "R";
         }
-        
-        if (data.saveToDB(data.generateID, extraFields)) {
+        if (!newOn) {
+            String id = (String) sql.getObj("SELECT ID FROM LB_HEEL " + " where ART='" + art + "'");
+            if (data.updateDB(id, null)) {
+                parentForm.fillTableHeel();
+                this.closeWindow();
+            }
+        } else if (data.saveToDB(data.generateID, extraFields)) {
             if (parentForm != null) {
                 parentForm.fillTableHeel();
             } else if (field != null) {
                 field.setText(data.getText(0));
             }
-            System.out.println("my.guisap.forms.BottomDetails.AddHeelForm.saveToDB()");
-            data.getLoadImageField().saveImage(data.getText(0));
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
 }

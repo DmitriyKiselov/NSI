@@ -29,6 +29,8 @@ public class LoadImageField extends JPanel {
     private Image image;
     private final String typeSave;
 
+    private int numberFieldName;
+
     SqlOperations sql = new SqlOperations();
 
     public LoadImageField(String typeSave, boolean showImage) {
@@ -59,7 +61,8 @@ public class LoadImageField extends JPanel {
         super.add(button);
         super.setBorder(CreateFormUtils.defaultBorder);
     }
-
+    
+    
     public void saveImage(String nameToSave) {
         if (fileToSave != null) {
             String path = CacheImage.cachePath.get(typeSave);

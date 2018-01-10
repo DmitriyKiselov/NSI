@@ -4,8 +4,6 @@
  */
 package my.guisap;
 
-import my.guisap.forms.ModelForm;
-import my.guisap.forms.FasonForm;
 import my.guisap.componenst.EmptyForm;
 import baseclass.BInternalFrame;
 import java.awt.Dimension;
@@ -48,7 +46,6 @@ public class attributeRowMainHeader extends attributeRow {
         if (atnam.equals(GuiStaticVariables.FASON_ATNAM)) {
             for (BInternalFrame fR2 : fR.formList) {
                 if (fR2.getClass().getName().equals("my.guisap.ModelForm")) {
-                    form = (EmptyForm) fR.openForm(new FasonForm("Редактирование фасона колодки", classFlag, (ModelForm) fR2), FormRegister.ONE_KEY_FORM);
                     break;
                 }
                 //if(formList.isEmpty()){break;}

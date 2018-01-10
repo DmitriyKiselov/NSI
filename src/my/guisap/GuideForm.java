@@ -558,13 +558,13 @@ public class GuideForm extends javax.swing.JDialog {
             case 2: {
                 switch (atnam) {
                     case "FASON_SOLE":
-                        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddSoleForm("Подошва", true, attRow.txt), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_HEEL":
-                        fr.openForm(new AddHeelForm("Каблук", "Heel", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddHeelForm("Каблук", true, attRow.txt), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_INSOLE":
-                        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, true, attRow.txt), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddInsoleForm("Основная стелька", true, attRow.txt), FormRegister.SOME_KEY_FORM);
                         break;
                 }
                 this.setVisible(false);

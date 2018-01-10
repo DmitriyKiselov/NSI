@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import my.guisap.componenst.DataPanel;
 import my.guisap.componenst.EmptyForm;
+import my.guisap.componenst.SaveForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CreateFormUtils;
 
@@ -16,7 +17,7 @@ import my.guisap.utils.CreateFormUtils;
  *
  * @author KiselevDA
  */
-public class AddInsoleForm extends EmptyForm {
+public class AddInsoleForm extends SaveForm {
 
     DataPanel data = new DataPanel("LB_BASIC_INSOLE", "NAME", 1);
 
@@ -24,14 +25,14 @@ public class AddInsoleForm extends EmptyForm {
 
     BottomDetails parentForm;
 
-    public AddInsoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, BottomDetails parentForm) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    public AddInsoleForm(String caption, boolean needToSave,  BottomDetails parentForm) {
+        super(caption,  needToSave);
         this.parentForm = parentForm;
         createFormFields();
     }
 
-    public AddInsoleForm(String caption, String classFlag, boolean needToSave, boolean needSaveSize, JTextField field) {
-        super(caption, classFlag, needToSave, needSaveSize);
+    public AddInsoleForm(String caption,  boolean needToSave,  JTextField field) {
+        super(caption,  needToSave);
         this.field = field;
         createFormFields();
     }
@@ -51,7 +52,7 @@ public class AddInsoleForm extends EmptyForm {
         data.setBorder(CreateFormUtils.defaultBorder);
         data.setCheckFields(true, null);
 
-        pnlAttElem.add(data);
+        contentPanel.add(data);
 
         pack();
         setCenter();
@@ -85,6 +86,11 @@ public class AddInsoleForm extends EmptyForm {
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    @Override
+    public void fillFields() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

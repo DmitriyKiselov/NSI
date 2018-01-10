@@ -15,6 +15,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
+import my.guisap.componenst.SaveForm;
 
 /**
  *
@@ -164,8 +165,14 @@ public class FormRegister {
                 if (e.getInternalFrame() == fR) {
                     try {
                         Method frameClose = fR.getClass().getMethod("formInternalFrameClosed", e.getClass());
-                        EmptyForm ef = (EmptyForm) fR;
-                        flag = ef.formInternalFrameClosed(e);
+                        if (fR instanceof EmptyForm) {
+                            EmptyForm ef = (EmptyForm) fR;
+                            flag = ef.formInternalFrameClosed(e);
+                        } else {
+                            SaveForm ef = (SaveForm) fR;
+                            flag = ef.formInternalFrameClosed(e);
+                        }
+
                     } catch (NoSuchMethodException ex) {
                         //Logger.getLogger(FormRegister.class.getName()).log(Level.SEVERE, null, ex);
                     }

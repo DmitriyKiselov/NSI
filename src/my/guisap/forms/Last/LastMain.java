@@ -347,14 +347,14 @@ public class LastMain extends BInternalFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString();
-            fr.openForm(new LastEdit("Колодка ", GuiStaticVariables.LAST, this, indexLast, true), FormRegister.ONE_KEY_FORM);
+            fr.openForm(new LastEdit("Колодка ", this, indexLast, true), FormRegister.ONE_KEY_FORM);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(this, "Выберите колодку для редактирования", "Ошибка", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        fr.openForm(new LastEdit("Колодка ", GuiStaticVariables.LAST, this), FormRegister.ONE_KEY_FORM);
+        fr.openForm(new LastEdit("Колодка ", this), FormRegister.ONE_KEY_FORM);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
@@ -372,7 +372,7 @@ public class LastMain extends BInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            fr.openForm(new LastEdit("Обработка заявки: " + jTable1.getValueAt(jTable1.getSelectedRow(), 0), GuiStaticVariables.LAST, this, null, jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()), FormRegister.ONE_KEY_FORM);
+            fr.openForm(new LastEdit("Обработка заявки: " + jTable1.getValueAt(jTable1.getSelectedRow(), 0), this, null, jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()), FormRegister.ONE_KEY_FORM);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(this, "Выберите запись", "Ошибка", JOptionPane.WARNING_MESSAGE);
         }
@@ -421,7 +421,7 @@ public class LastMain extends BInternalFrame {
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
             String indexLast = jTable2.getValueAt(jTable2.getSelectedRow(), indexColumn).toString();
-            fr.openForm(new LastEdit("Колодка ", GuiStaticVariables.LAST, this, indexLast, false), FormRegister.ONE_KEY_FORM);
+            fr.openForm(new LastEdit("Колодка ", this, indexLast, false), FormRegister.ONE_KEY_FORM);
         } catch (IndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(this, "Выберите колодку на основе которой создать новую", "Ошибка", JOptionPane.WARNING_MESSAGE);
         }

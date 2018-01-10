@@ -12,9 +12,11 @@ import javax.swing.table.TableRowSorter;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
 import my.guisap.componenst.MyImageCellRenderer;
+import my.guisap.forms.SingleImageForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
+import my.guisap.utils.ImageUtils;
 
 /**
  *
@@ -29,6 +31,7 @@ public class UpDetailsMain extends BInternalFrame {
     public UpDetailsMain() {
         initComponents();
         fillTable();
+        setIcons();
     }
 
     public void fillTable() {
@@ -57,6 +60,10 @@ public class UpDetailsMain extends BInternalFrame {
         jTable1.getColumnModel().getColumn(0).setPreferredWidth(80);
     }
 
+    private void setIcons() {
+        jButton17.setIcon(ImageUtils.createIconForButton("images/update.png"));
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -79,7 +86,7 @@ public class UpDetailsMain extends BInternalFrame {
         jButton1 = ComponentsUtils.createBtn("Добавить",140,25,true);
         jButton3 = ComponentsUtils.createBtn("Добавить на основе",240,25,true);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTable1.setFont(GuiStaticVariables.globalFont);
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -93,6 +100,11 @@ public class UpDetailsMain extends BInternalFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
         jTable1.setAutoCreateRowSorter(true);
         jTable1.setCellSelectionEnabled(true);
@@ -202,18 +214,32 @@ public class UpDetailsMain extends BInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton17ActionPerformed
+        fillTable();
     }//GEN-LAST:event_jButton17ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        fr.openForm(new AddUpDetails("Конструкция верха", "UP_D", true, false, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddUpDetails("Конструкция верха", true, this), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        fr.openForm(new AddUpDetails("Конструкция верха", "UP_D", true, false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString()), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new AddUpDetails("Конструкция верха", true, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString(), true), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        if (evt.getClickCount() == 2) {
+            switch (jTable1.getSelectedColumn()) {
+                case 0:
+                    fr.openForm(new SingleImageForm(CacheImage.cachePath.get(CacheImage.TYPE_UP), jTable1.getValueAt(jTable1.getSelectedRow(), 1).toString()), FormRegister.SOME_KEY_FORM);
+                    break;
+                default:
+                    fr.openForm(new AddUpDetails("Каблук", false, this, jTable1.getValueAt(jTable1.getSelectedRow(), indexColumn).toString(), false), FormRegister.SOME_KEY_FORM);
+                    break;
+            }
+        }
+    }//GEN-LAST:event_jTable1MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -493,13 +493,13 @@ public class CatalogForm extends javax.swing.JDialog {
             case 2: {
                 switch (field.getDiscriptionField()) {
                     case "FASON_SOLE":
-                        fr.openForm(new AddSoleForm("Подошва", "Sole", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddSoleForm("Подошва", true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_HEEL":
-                        fr.openForm(new AddHeelForm("Каблук", "Heel", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddHeelForm("Каблук", true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                     case "FASON_INSOLE":
-                        fr.openForm(new AddInsoleForm("Основная стелька", "Base_insole", true, true, field.getTextField()), FormRegister.SOME_KEY_FORM);
+                        fr.openForm(new AddInsoleForm("Основная стелька", true, field.getTextField()), FormRegister.SOME_KEY_FORM);
                         break;
                 }
                 this.setVisible(false);

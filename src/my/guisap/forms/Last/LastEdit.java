@@ -17,6 +17,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.FormRegister;
 import my.guisap.componenst.NewDataPanel;
+import my.guisap.componenst.SaveForm;
 import my.guisap.forms.SimpleTableForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.ComponentsUtils;
@@ -27,11 +28,10 @@ import my.guisap.utils.TextUtils;
  *
  * @author KiselevDA
  */
-public class LastEdit extends EmptyForm {
+public class LastEdit extends SaveForm {
 
     NewDataPanel mainData = new NewDataPanel("LAST_HEAD", "ID", "LastEdit", 1);
 
-    String classFlag;
     LastMain ParrentForm;
     String indexLast;
     String model;
@@ -41,10 +41,9 @@ public class LastEdit extends EmptyForm {
     StringBuilder formIndexLast = new StringBuilder("00000/18-0");
     boolean isEditing = false;
 
-    public LastEdit(String caption, String classFlag, LastMain ParrentForm) {
-        super(caption, classFlag, true, false);
+    public LastEdit(String caption, LastMain ParrentForm) {
+        super(caption, true);
         this.ParrentForm = ParrentForm;
-        this.classFlag = classFlag;
         log = LogClass.getInstance();
         createFormFields();
         formIndex();
@@ -62,10 +61,9 @@ public class LastEdit extends EmptyForm {
      * @param isEditing отвечает за выбор режима, true - редактирование, false
      * -создания на основе
      */
-    public LastEdit(String caption, String classFlag, LastMain ParrentForm, String indexLast, boolean isEditing) {
-        super(caption, classFlag, true, false);
+    public LastEdit(String caption, LastMain ParrentForm, String indexLast, boolean isEditing) {
+        super(caption, true);
         this.ParrentForm = ParrentForm;
-        this.classFlag = classFlag;
         log = LogClass.getInstance();
         createFormFields();
         DefaultTableModel idModel = new DefaultTableModel();
@@ -80,22 +78,18 @@ public class LastEdit extends EmptyForm {
     }
 
     //открытие окна при обработке заявки
-    public LastEdit(String caption, String classFlag, LastMain ParrentForm, String indexLast, final String model) {
-        super(caption, classFlag, true, false);
+    public LastEdit(String caption, LastMain ParrentForm, String indexLast, final String model) {
+        super(caption, true);
         this.ParrentForm = ParrentForm;
-        this.classFlag = classFlag;
         this.model = model;
         fr = FormRegister.getInstance();
         log = LogClass.getInstance();
-        JButton openModel = ComponentsUtils.createBtn("Открыть модель", 150, 23, true);
-        openModel.addActionListener(new ActionListener() {
+        ExtraButtInitial("Открыть модель", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 fr.openForm(new SimpleTableForm("Модель:" + model, SqlOperations.MKZ_LIST + " where MODEL='" + model + "'"), FormRegister.ONE_KEY_FORM);
             }
         });
-        pnlSouth.add(new JLabel("    "));
-        pnlSouth.add(openModel);
         createFormFields();
         formIndex();
         fillFields(model);
@@ -104,7 +98,7 @@ public class LastEdit extends EmptyForm {
     private void createFormFields() {
         mainData.getTextField(1).setEnabled(true);
         mainData.setCheckFields(true);
-        pnlAttElem.add(mainData);
+        contentPanel.add(mainData);
         pack();
         setCenter();
     }
@@ -114,7 +108,8 @@ public class LastEdit extends EmptyForm {
         saveToDB();
     }
 
-    private void fillFields() {
+    @Override
+    public void fillFields() {
         mainData.fillFields(SqlOperations.LAST_LIST_TO_EDIT + " where INDEX_LAST='" + indexLast + "'", 0);
         if (isEditing) {
             mainData.blockFields(new int[]{0, 1, 2, 3, 4, 5, 6});

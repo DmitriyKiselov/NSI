@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package my.guisap;
 
 import my.guisap.forms.UserEditDialog;
@@ -9,7 +5,6 @@ import my.guisap.componenst.JOverrideTable;
 import baseclass.BInternalFrame;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
-import my.guisap.sql.SqlOperations;
 
 /**
  *
@@ -17,7 +12,6 @@ import my.guisap.sql.SqlOperations;
  */
 public final class EditUserForm extends BInternalFrame {
 
-    SqlOperations sql = new SqlOperations();
     UserEditDialog userDialog;
     DefaultTableModel userInfoModel = new DefaultTableModel(0, 0);
     DefaultTableModel groupsModel = new DefaultTableModel(0, 0);

@@ -37,12 +37,11 @@ public class UpdateForm extends EmptyForm {
 
         if (needCheck) {
             if (getActualVersion()) {
-
             } else {
                 super.closeWindow();
+                return;
             }
         }
-
         lblHeader.setText("Обновление не требуется");
         saveButt.setText("Обновить");
         saveButt.setEnabled(false);

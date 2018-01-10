@@ -8,7 +8,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import static my.guisap.MainWindow.desktop;
 import my.guisap.forms.UpdateForm;
 import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.skin.SubstanceMistSilverLookAndFeel;

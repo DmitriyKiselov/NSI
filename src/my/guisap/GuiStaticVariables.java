@@ -47,7 +47,7 @@ public class GuiStaticVariables {
     /**
      * Версия приложения
      */
-    public static String VERSIONAPP = "2.0(080118-1)";
+    public static String VERSIONAPP = "2.0(100118-0)";
     public static String ACTUALVERSIONAPP = "";
     public static Font globalFont = new Font("Arial", 0, 12);
 
@@ -55,7 +55,7 @@ public class GuiStaticVariables {
         if (screenHeight > 1200) {
             globalFont = new Font("Arial", 0, (int) (12 * GuiStaticVariables.scaleHeight));
         }
-        
+
     }
 
     public static boolean SETTIN_LOCATION_ON_MOUSE = true;

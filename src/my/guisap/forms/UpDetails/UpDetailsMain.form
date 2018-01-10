@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JInternalFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -103,6 +102,9 @@
               </Table>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable1MouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable1.setAutoCreateRowSorter(true);&#xa;jTable1.setCellSelectionEnabled(true);&#xa;jTable1.setOpaque(false);&#xa;jTable1.setUpdateSelectionOnSort(false);&#xa;jTable1.setRowHeight(180);&#xa;jTable1.getColumnModel().getColumn(0).setPreferredWidth(140);"/>
             <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="TableRowFilterSupport&#xa;.forTable(new JTable(){&#xa;    @Override&#xa;    public boolean isCellEditable(int arg0, int arg1) {&#xa;        return false;&#xa;    };&#xa;})&#xa;.searchable(true)&#xa;.actions(true)&#xa;.apply()"/>
