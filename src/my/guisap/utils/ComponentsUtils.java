@@ -49,7 +49,7 @@ public class ComponentsUtils {
         JSpinner resultSpinner = new JSpinner();
         createComponent(resultSpinner, width, height, enabled);
         resultSpinner.setModel(model);
-        resultSpinner.setEditor(new JSpinner.NumberEditor(resultSpinner, "#"));
+        resultSpinner.setEditor(new JSpinner.NumberEditor(resultSpinner, "#.#"));
         return resultSpinner;
     }
 

@@ -5,7 +5,6 @@
 package my.guisap.forms;
 
 import java.util.ArrayList;
-import my.guisap.EditUserForm;
 import my.guisap.MainClass;
 import my.guisap.sql.SqlOperations;
 

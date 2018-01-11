@@ -179,21 +179,17 @@ public class SqlOperations {
     public static final String HEEL_FULL = "SELECT * FROM LB_HEEL ORDER BY ID";
     public static final String INSOLE_FULL = "SELECT NAME \"Фасон стельки\",MATERIAL \"Материал\",PROVIDER \"Изготовитель\",ROSTOVKA \"Ростовка\",CONSTRUCTION \"Конструкция\" ,case when STATUS = 'NS' then 'Ожидание добавления в SAP' when STATUS = 'R' then 'Заявка' when Status = 'S' then 'Данные заведены в SAP' end \"Статус\" FROM LB_BASIC_INSOLE ORDER BY ID";
 
-    public static final String EC_MAIN = "SELECT ID \"ИД\", TYPE_PART \"Тип партии\", MODEL \"Модель\", ART \"Артикул\", COUNT \"Количество\", SIZE_SHOE \"Количество\", NOTE \"Примечание\", DIRECTED \"Направлено\", DATE_CREATE \"Дата создания\" from EC";
-
+    public static final String EC_MAIN = "select  id \"ИД\", fio_constructor \"ФИО кнстр.\",  type_part \"Тип партии\",  tech \"Технология\",  model \"Модель\",  art \"Артикул\",  designer \"Художник\",  model_analog \"Модель аналог\",  count           \"Количество\",  size_shoe       \"Размер\",  note  \"Коментарий\",  date_create \"Дата создания\",  status  \"Стадия\" from EC";
     private Statement st;
     private ResultSet rs;
     private JTable table = new JTable();
     ConnectionClass connect;
-    
+
     public static final SqlOperations sql = new SqlOperations();
 
     public SqlOperations() {
-        
+
     }
-    
-    
-    
 
     public int dataUpdate(String query) {
         return dataUpdate_1(query, 0);

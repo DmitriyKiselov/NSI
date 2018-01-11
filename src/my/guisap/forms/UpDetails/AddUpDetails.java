@@ -18,11 +18,12 @@ public class AddUpDetails extends SaveForm {
     UpDetailsMain parentForm;
     String index = "";
 
-    boolean newOn;
+    boolean createNew;
 
     public AddUpDetails(String caption, boolean needToSave, UpDetailsMain parentForm) {
         super(caption, needToSave);
         this.parentForm = parentForm;
+        this.createNew = true;
         createFormFields(true);
 
     }
@@ -31,8 +32,8 @@ public class AddUpDetails extends SaveForm {
         super(caption, needToSave);
         this.parentForm = parentForm;
         this.index = index;
-        this.newOn = newOn;
-        createFormFields(newOn);
+        this.createNew = newOn;
+        createFormFields(createNew);
         fillFields();
     }
 
@@ -50,7 +51,7 @@ public class AddUpDetails extends SaveForm {
     @Override
     public void fillFields() {
         data.fillFields("SELECT * FROM LB_UP_DETAILS " + " where INDEX_UP='" + index + "'", 1);
-        if (!newOn) {
+        if (!createNew) {
             data.blockFields(new int[]{0, 1, 2, 3, 4, 5, 6});
         }
     }
@@ -77,7 +78,7 @@ public class AddUpDetails extends SaveForm {
         });
         data.getTextField(5).addCaretListener((ce) -> {
             String tmp = data.getCode(5);
-            
+
             generateIndex();
         });
         data.getTextField(6).addCaretListener((ce) -> {
@@ -103,14 +104,16 @@ public class AddUpDetails extends SaveForm {
     }
 
     private void saveToDB() {
-        String[] extraFields = new String[1];
+        String[][] extraFields = {
+            {"STATUS", ""}};
 
         if (my.guisap.utils.SecurityManager.idGroup == 1) {
-            extraFields[0] = "NS";
+            extraFields[0][1] = "NS";
         } else {
-            extraFields[0] = "R";
+            extraFields[0][1] = "R";
         }
-        if (!newOn) {
+
+        if (!createNew) {
             String id = (String) sql.getObj("SELECT ID FROM LB_UP_DETAILS where" + " INDEX_UP='" + index + "'");
             if (data.updateDB(id, null)) {
                 parentForm.fillTable();

@@ -14,20 +14,22 @@ import my.guisap.componenst.SaveForm;
  */
 public class ECConstructor extends SaveForm {
 
-    NewDataPanel data = new NewDataPanel("CONSTRUCTOR_REQUEST", "ID", "ECConstructor", 1);
+    NewDataPanel data = new NewDataPanel("EC", "ID", "ECConstructor", 1);
 
     boolean newOn;
 
-    public ECConstructor() {
-        super(null, false);
+    public ECConstructor(String title, boolean nedToSave) {
+        super(title, nedToSave);
+        createFormFields();
     }
 
-    public ECConstructor(boolean newOn) {
-        super(null, false);
+    public ECConstructor(String title, boolean nedToSave, boolean newOn) {
+        super(title, nedToSave);
         this.newOn = newOn;
+        createFormFields();
     }
 
-    private void createFormFields(boolean addProcessing) {
+    private void createFormFields() {
         data.setCheckFields(true);
         contentPanel.add(data);
 
@@ -48,6 +50,7 @@ public class ECConstructor extends SaveForm {
     }
 
     private void saveToDB() {
+        
     }
 
 }

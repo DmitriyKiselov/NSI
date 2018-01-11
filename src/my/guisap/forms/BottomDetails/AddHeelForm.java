@@ -25,23 +25,24 @@ public class AddHeelForm extends SaveForm {
 
     JTextField field;
     BottomDetails parentForm;
-    
+
     NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
 
     String art = "";
 
-    boolean newOn;
+    boolean createNew;
 
     public AddHeelForm(String caption, boolean needToSave, BottomDetails parentForm) {
         super(caption, needToSave);
         this.parentForm = parentForm;
+        this.createNew = true;
         createFormFields(true);
     }
 
     public AddHeelForm(String caption, boolean needToSave, BottomDetails parentForm, String art, boolean newOn) {
         super(caption, needToSave);
         this.parentForm = parentForm;
-        this.newOn = newOn;
+        this.createNew = newOn;
         createFormFields(newOn);
 
         this.art = art;
@@ -51,7 +52,7 @@ public class AddHeelForm extends SaveForm {
     public AddHeelForm(String caption, boolean needToSave, JTextField field) {
         super(caption, needToSave);
         this.field = field;
-        createFormFields(newOn);
+        createFormFields(true);
     }
 
     private void createFormFields(boolean addProcessing) {
@@ -70,7 +71,7 @@ public class AddHeelForm extends SaveForm {
     @Override
     public void fillFields() {
         data.fillFields("SELECT * FROM LB_HEEL " + " where ART='" + art + "'", 1);
-        if (!newOn) {
+        if (!createNew) {
             data.blockFields(new int[]{0, 1});
         }
     }
@@ -105,14 +106,16 @@ public class AddHeelForm extends SaveForm {
     }
 
     private void saveToDB() {
-        String[] extraFields = new String[1];
+
+        String[][] extraFields = {
+            {"STATUS", ""}};
 
         if (SecurityManager.idGroup == 1) {
-            extraFields[0] = "NS";
+            extraFields[0][1] = "NS";
         } else {
-            extraFields[0] = "R";
+            extraFields[0][1] = "R";
         }
-        if (!newOn) {
+        if (!createNew) {
             String id = (String) sql.getObj("SELECT ID FROM LB_HEEL " + " where ART='" + art + "'");
             if (data.updateDB(id, null)) {
                 parentForm.fillTableHeel();

@@ -103,8 +103,6 @@ public class CatalogForm extends javax.swing.JDialog {
 
     private void signsFormation(String atprt, String atnam) {
 
-        System.out.println(atprt + " " + atnam);
-
         jTable1.setModel(guideModelLocal);
         jTable1.getTableHeader().setReorderingAllowed(false);
 

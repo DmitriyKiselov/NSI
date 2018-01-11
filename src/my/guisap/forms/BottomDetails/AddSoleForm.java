@@ -24,11 +24,11 @@ public class AddSoleForm extends SaveForm {
 
     String art = "";
 
-    boolean newOn;
+    boolean createNew;
 
     public AddSoleForm(String caption, boolean needToSave, BottomDetails parentForm) {
         super(caption, needToSave);
-
+        createNew = true;
         this.parentForm = parentForm;
         createFormFields(true);
     }
@@ -36,7 +36,7 @@ public class AddSoleForm extends SaveForm {
     public AddSoleForm(String caption, boolean needToSave, BottomDetails parentForm, String art, boolean newOn) {
         super(caption, needToSave);
         this.parentForm = parentForm;
-        this.newOn = newOn;
+        this.createNew = newOn;
         createFormFields(newOn);
         this.art = art;
         fillFields();
@@ -64,7 +64,7 @@ public class AddSoleForm extends SaveForm {
     @Override
     public void fillFields() {
         data.fillFields("SELECT * FROM LB_SOLE " + " where ART='" + art + "'", 1);
-        if (!newOn) {
+        if (!createNew) {
             data.blockFields(new int[]{0, 1});
         }
     }
@@ -99,15 +99,16 @@ public class AddSoleForm extends SaveForm {
     }
 
     private void saveToDB() {
-        String[] extraFields = new String[1];
+        String[][] extraFields = {
+            {"STATUS", ""}};
 
         if (my.guisap.utils.SecurityManager.idGroup == 1) {
-            extraFields[0] = "NS";
+            extraFields[0][1] = "NS";
         } else {
-            extraFields[0] = "R";
+            extraFields[0][1] = "R";
         }
 
-        if (!newOn) {
+        if (!createNew) {
             String id = (String) sql.getObj("SELECT ID FROM LB_SOLE " + " where ART='" + art + "'");
             if (data.updateDB(id, null)) {
                 parentForm.fillTableHeel();

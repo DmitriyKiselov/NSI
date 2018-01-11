@@ -274,13 +274,32 @@ public class NewDataPanel extends JPanel {
      * @param extraFields дополнительные поля для вставки (в конце запроса)
      * @return
      */
-    public boolean saveToDB(String id, String[] extraFields) {
+    public boolean saveToDB(String id, String[][] extraFields) {
 
         if (checkFields() == false) {
             return false;
         }
 
-        StringBuilder query = new StringBuilder("insert into " + nameTable + " values (");
+        StringBuilder query = new StringBuilder("insert into " + nameTable + " (");
+
+        if (!id.equals("")) {
+            query.append("ID,");
+        }
+
+        for (int i = 0; i < listFields.size(); i++) {
+            query.append("").append(listFields.get(i).getNameToSave()).append(",");
+        }
+
+        if (extraFields != null) {
+            for (String[] str : extraFields) {
+                query.append("").append(str[0]).append(",");
+            }
+        }
+
+        query.deleteCharAt(query.length() - 1);
+        query.append(")");
+
+        query.append(" values (");
 
         // добавление к запросу id
         if (!id.equals("")) {
@@ -292,13 +311,15 @@ public class NewDataPanel extends JPanel {
         }
 
         if (extraFields != null) {
-            for (String str : extraFields) {
-                query.append("'").append(str).append("',");
+            for (String[] str : extraFields) {
+                query.append("'").append(str[1]).append("',");
             }
         }
 
         query.deleteCharAt(query.length() - 1);
         query.append(")");
+
+        System.out.println(query.toString());
 
         sql.SendQuery(query.toString());
         log.logWriting("Добавлена запись: " + getText(0) + " в таблицу: " + nameTable);
@@ -307,6 +328,46 @@ public class NewDataPanel extends JPanel {
         return true;
     }
 
+    /**
+     * Сохранение в базу данных, при учете что поля в таблице и на форме в
+     * идентичном порядки
+     *
+     * @param id ид для сохранения, находится на 1 позиции
+     * @param extraFields дополнительные поля для вставки (в конце запроса)
+     * @return
+     */
+//    public boolean saveToDB(String id, String[] extraFields) {
+//
+//        if (checkFields() == false) {
+//            return false;
+//        }
+//
+//        StringBuilder query = new StringBuilder("insert into " + nameTable + " values (");
+//
+//        // добавление к запросу id
+//        if (!id.equals("")) {
+//            query.append(id);
+//        }
+//
+//        for (int i = 0; i < listFields.size(); i++) {
+//            query.append("'").append(listFields.get(i).getText()).append("',");
+//        }
+//
+//        if (extraFields != null) {
+//            for (String str : extraFields) {
+//                query.append("'").append(str).append("',");
+//            }
+//        }
+//
+//        query.deleteCharAt(query.length() - 1);
+//        query.append(")");
+//
+//        sql.SendQuery(query.toString());
+//        log.logWriting("Добавлена запись: " + getText(0) + " в таблицу: " + nameTable);
+//        saveImage();
+//
+//        return true;
+//    }
     /**
      * Сохранение в базу данных
      *

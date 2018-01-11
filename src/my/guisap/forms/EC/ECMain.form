@@ -78,7 +78,6 @@
           </Properties>
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable2MouseClicked"/>
-            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jTable2MousePressed"/>
           </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="jTable2.setAutoCreateRowSorter(true);&#xa;&#xa;jTable2.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);&#xa;&#xa;jTable2.setCellSelectionEnabled(true);&#xa;&#xa;jTable2.setOpaque(false);&#xa;&#xa;jTable2.setUpdateSelectionOnSort(false);"/>

@@ -1,5 +1,7 @@
 package my.guisap;
 
+import my.guisap.forms.EditClassForm;
+import my.guisap.forms.EditUserForm;
 import my.guisap.forms.RequestReport;
 import my.guisap.forms.Calculation.CalculationMain;
 import my.guisap.forms.Last.LastMain;

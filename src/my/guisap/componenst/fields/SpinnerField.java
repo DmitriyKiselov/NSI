@@ -30,10 +30,21 @@ public class SpinnerField extends EntityForField {
 
         this.nameField = ComponentsUtils.createLabel(discriptionField);
 
-        switch (info) {
+        String[] splitInfo = info.split("/");
+
+        switch (splitInfo[0]) {
             case "year": {
                 Calendar calendar = Calendar.getInstance();
                 value = new SpinnerNumberModel(calendar.get(Calendar.YEAR), 1900, 2100, 1);
+            }
+            break;
+            case "count": {
+
+                value = new SpinnerNumberModel(Double.parseDouble(splitInfo[1]),
+                        Double.parseDouble(splitInfo[2]),
+                        Double.parseDouble(splitInfo[3]),
+                        Double.parseDouble(splitInfo[4]));
+
             }
             break;
         }

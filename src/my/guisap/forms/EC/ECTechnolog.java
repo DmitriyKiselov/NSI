@@ -16,18 +16,15 @@ public class ECTechnolog extends SaveForm {
 
     NewDataPanel data = new NewDataPanel("EC", "ID", "ECTechnolog", 1);
 
-    boolean newOn;
+    String id;
 
-    public ECTechnolog() {
-        super(null, false);
+    public ECTechnolog(String title, String id, boolean nedToSave) {
+        super(title, nedToSave);
+        this.id = id;
+        createFormFields();
     }
 
-    public ECTechnolog(boolean newOn) {
-        super(null, false);
-        this.newOn = newOn;
-    }
-
-    private void createFormFields(boolean addProcessing) {
+    private void createFormFields() {
         data.setCheckFields(true);
         contentPanel.add(data);
 
@@ -37,9 +34,7 @@ public class ECTechnolog extends SaveForm {
 
     @Override
     public void fillFields() {
-        if (!newOn) {
-            data.blockFields(new int[]{0, 1});
-        }
+
     }
 
     @Override

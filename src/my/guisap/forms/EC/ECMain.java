@@ -6,7 +6,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
+import my.guisap.forms.BottomDetails.AddSoleForm;
+import my.guisap.forms.SingleImageForm;
 import my.guisap.sql.SqlOperations;
+import my.guisap.utils.CacheImage;
 import my.guisap.utils.ComponentsUtils;
 
 /**
@@ -44,7 +47,7 @@ public class ECMain extends BInternalFrame {
         .apply();
         jButton2 = ComponentsUtils.createBtn("Редактировать колодку",120,25,true);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jTable2.setFont(GuiStaticVariables.globalFont);
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -62,9 +65,6 @@ public class ECMain extends BInternalFrame {
         jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jTable2MouseClicked(evt);
-            }
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                jTable2MousePressed(evt);
             }
         });
         jScrollPane2.setViewportView(jTable2);
@@ -117,15 +117,20 @@ public class ECMain extends BInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
-
+        if (evt.getClickCount() == 2) {
+            switch (jTable2.getSelectedColumn()) {
+                case 0:
+                    fr.openForm(new SingleImageForm(CacheImage.cachePath.get(CacheImage.TYPE_SOLE), jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString()), FormRegister.SOME_KEY_FORM);
+                    break;
+                default:
+                    fr.openForm(new ECTechnolog("Обработка заявки", jTable2.getValueAt(jTable2.getSelectedRow(), 1).toString(), true), FormRegister.SOME_KEY_FORM);
+                    break;
+            }
+        }
     }//GEN-LAST:event_jTable2MouseClicked
 
-    private void jTable2MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MousePressed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTable2MousePressed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        fr.openForm(new ECRequest("Заявка", "EC", true, true, this), FormRegister.SOME_KEY_FORM);
+        fr.openForm(new ECConstructor("Создание заявки", true), FormRegister.SOME_KEY_FORM);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
