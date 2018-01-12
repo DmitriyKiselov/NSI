@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import my.guisap.GuiStaticVariables;
-import my.guisap.componenst.DataPanel;
 import my.guisap.componenst.EmptyForm;
+import my.guisap.componenst.NewDataPanel;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CreateFormUtils;
 
@@ -18,7 +18,7 @@ import my.guisap.utils.CreateFormUtils;
  */
 public class CreateArticleForm extends EmptyForm {
 
-    DataPanel data = new DataPanel("MKZ_MODEL_ART", "ART", 1);
+    NewDataPanel data = new NewDataPanel("MKZ_MODEL_ART", "", "CreateArticleForm", 1);
 
     MkzEditModel parent;
 
@@ -43,9 +43,7 @@ public class CreateArticleForm extends EmptyForm {
 
         String[][] id = {{"Артикул", "false"}};
 
-        data.addFields(id, 0, 1, CreateFormUtils.DEFAULT_INSETS);
-        data.addFieldsWithCatalog(SqlOperations.DATA_SELECTION + "'NEW_ART' and MAIN_CLASS = 'NEW_ART' " + SqlOperations.GROUP_BY, true, 0);
-        data.getTextField(0).setText(lastArticul);
+        data.setText(0, lastArticul);
         data.setCheckFields(true);
 
         pnlAttElem.add(data);
@@ -68,15 +66,22 @@ public class CreateArticleForm extends EmptyForm {
 
     @Override
     public void saveActionPerformed(java.awt.event.ActionEvent evt) {
-        if (data.checkFields()) {
-            String insertQuery = "insert into GUI_SAP.MKZ_MODEL_ART (ART,ID, COLOR,GROUPE_MAT_UPPER,MAT_UPPER,MODEL_ID,ART_ID,STATUS) VALUES('" + newModel.toString() + "','1','"
-                    + data.getTextField(1).getText() + "','" + data.getTextField(2).getText() + "','" + data.getTextField(3).getText() + "','" + modelId + "','" + artId.toString() + "','" + "F')";
-            sql.SendQuery(insertQuery);
+        String[][] extraFields = {
+            {"ART", newModel.toString()},
+            {"ID", "1"},
+            {"MODEL_ID", "modelId"},
+            {"ART_ID", artId.toString()},
+            {"STATUS", "F"}};
 
+        if (data.saveToDB("", extraFields)) {
+//            String insertQuery = "insert into GUI_SAP.MKZ_MODEL_ART (ART,ID, COLOR,GROUPE_MAT_UPPER,MAT_UPPER,MODEL_ID,ART_ID,STATUS) VALUES('" + newModel.toString() + "','1','"
+//                    + data.getTextField(1).getText() + "','" + data.getTextField(2).getText() + "','" + data.getTextField(3).getText() + "','" + modelId + "','" + artId.toString() + "','" + "F')";
+//            sql.SendQuery(insertQuery);
             parent.Btn_Add_Art(newModel.toString(), true, comboBoxArt.getSelectedItem().toString());
             parent.fillArt(data, newModel.toString());
 
             log.logWriting("Заведен артикул: " + newModel.toString());
+
             this.isClosed = true;
             this.closeWindow();
         } else {

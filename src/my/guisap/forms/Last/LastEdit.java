@@ -206,7 +206,7 @@ public class LastEdit extends SaveForm {
         if (isEditing) {
             mainData.updateDB(idLast, null);
         } else {
-            if (testIndexInDB(mainData.getText(0)) && mainData.saveToDB(true, new String[]{"ID", "DATE_CREATE"}, null)) {
+            if (testIndexInDB(mainData.getText(0)) && mainData.saveToDB(mainData.generateID, null)) {
 
             } else {
                 JOptionPane.showMessageDialog(this, "Заполните указанные поля", "Предупреждение", JOptionPane.WARNING_MESSAGE);

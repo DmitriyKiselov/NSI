@@ -66,7 +66,7 @@ public class MainWindow extends javax.swing.JFrame {
         loadConfig();
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        
+        fr.openForm(new UpdateForm(true), FormRegister.ONE_KEY_FORM);
     }
 
     @SuppressWarnings("unchecked")

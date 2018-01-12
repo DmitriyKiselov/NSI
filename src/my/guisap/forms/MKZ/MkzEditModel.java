@@ -24,7 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import my.guisap.FormRegister;
 import my.guisap.GuiStaticVariables;
 import my.guisap.attributeRow;
-import my.guisap.componenst.DataPanel;
+import my.guisap.componenst.NewDataPanel;
 import my.guisap.forms.ImageForm;
 import my.guisap.sql.SqlOperations;
 import my.guisap.utils.CacheImage;
@@ -545,10 +545,10 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model,CacheImage.cacheModel);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model, CacheImage.cacheModel);
                     }
                 } else {
-                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model,CacheImage.cacheModel);
+                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_PICTURES_PATH, GuiStaticVariables.DEF_PICTURESICONS_PATH, Model, CacheImage.cacheModel);
                 }
             }
         });
@@ -564,10 +564,10 @@ public class MkzEditModel extends EmptyForm {
                             "Внимание",
                             JOptionPane.YES_NO_OPTION);
                     if (n == JOptionPane.YES_OPTION) {
-                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model,null);
+                        ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model, null);
                     }
                 } else {
-                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model,null);
+                    ImageUtils.openSaveImageDialog(GuiStaticVariables.DEF_DESIGN_PATH, GuiStaticVariables.DEF_DESIGNICONS_PATH, Model, null);
                 }
             }
         }
@@ -1510,7 +1510,7 @@ public class MkzEditModel extends EmptyForm {
         }
     }
 
-    public void fillArt(DataPanel data, String art) {
+    public void fillArt(NewDataPanel data, String art) {
         for (ArrayList<JTextField> listFields : ListArtInfo) {
             if (listFields.get(0).getText().equals(art)) {
                 listFields.get(2).setText(data.getTextField(1).getText());

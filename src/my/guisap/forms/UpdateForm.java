@@ -34,11 +34,12 @@ public class UpdateForm extends EmptyForm {
 
     public UpdateForm(boolean needCheck) {
         super("Обновление", "updateForm", false, false);
-
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         if (needCheck) {
             if (getActualVersion()) {
             } else {
-                super.closeWindow();
+
+                closeWindow();
                 return;
             }
         }

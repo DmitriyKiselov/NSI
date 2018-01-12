@@ -2,6 +2,8 @@ package my.guisap.forms.BottomDetails;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
@@ -10,6 +12,7 @@ import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.NewDataPanel;
 import my.guisap.componenst.SaveForm;
 import my.guisap.utils.CacheImage;
+import my.guisap.utils.ComponentsUtils;
 
 /**
  *
@@ -21,6 +24,9 @@ public class AddSoleForm extends SaveForm {
     BottomDetails parentForm;
 
     NewDataPanel data = new NewDataPanel("LB_SOLE", "ID", "AddSoleForm", 1);
+
+    JButton addLast = ComponentsUtils.createBtn("Добавить связь с колодкой", 200, 25, true);
+    ArrayList<NewDataPanel> listLast = new ArrayList<>();
 
     String art = "";
 
@@ -52,6 +58,15 @@ public class AddSoleForm extends SaveForm {
         data.addLoadImageField(CacheImage.TYPE_SOLE, false, 0);
 //        data.setCheckFields(true);
         contentPanel.add(data);
+        contentPanel.add(addLast);
+
+        addLast.addActionListener((ae) -> {
+            NewDataPanel tmp = new NewDataPanel("FASON_LINK", "SOLE", "AddHeelFormLink", 1);
+            listLast.add(tmp);
+            
+            contentPanel.add(tmp);
+            pack();
+        });
 
         if (addProcessing) {
             processing();

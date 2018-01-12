@@ -7,6 +7,8 @@ package my.guisap.forms.BottomDetails;
 
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.event.CaretEvent;
@@ -26,7 +28,9 @@ public class AddHeelForm extends SaveForm {
     JTextField field;
     BottomDetails parentForm;
 
+
     NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
+
 
     String art = "";
 
@@ -59,6 +63,7 @@ public class AddHeelForm extends SaveForm {
         data.addLoadImageField(CacheImage.TYPE_HEEL, false, 0);
 //        data.setCheckFields(true);
         contentPanel.add(data);
+    
 
         if (addProcessing) {
             processing();

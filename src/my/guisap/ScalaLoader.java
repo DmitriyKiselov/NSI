@@ -18,8 +18,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,7 +32,6 @@ import my.guisap.sql.SqlOperations;
 
 public class ScalaLoader extends BInternalFrame {
 
-    LogClass log;
     DefaultTableModel attrModel = new DefaultTableModel();
     ColorRend colRend = new ColorRend();
     String art = "";
