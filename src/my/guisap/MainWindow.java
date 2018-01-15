@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 import my.guisap.forms.BlackList.BlackList;
+import my.guisap.forms.BottomDetails.BottomDetails;
 import my.guisap.forms.UpdateForm;
 import my.guisap.forms.ConnectionFrame;
 import my.guisap.forms.EC.ECMain;

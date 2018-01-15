@@ -17,6 +17,7 @@ import javax.swing.table.DefaultTableModel;
 import my.guisap.componenst.NewDataPanel;
 import my.guisap.componenst.SaveForm;
 import my.guisap.utils.CacheImage;
+import my.guisap.utils.ComponentsUtils;
 import my.guisap.utils.SecurityManager;
 
 /**
@@ -28,9 +29,10 @@ public class AddHeelForm extends SaveForm {
     JTextField field;
     BottomDetails parentForm;
 
-
     NewDataPanel data = new NewDataPanel("LB_HEEL", "ID", "AddHeelForm", 1);
 
+    JButton addLast = ComponentsUtils.createBtn("Добавить связь с колодкой", 200, 25, true);
+    ArrayList<NewDataPanel> listLast = new ArrayList<>();
 
     String art = "";
 
@@ -63,8 +65,13 @@ public class AddHeelForm extends SaveForm {
         data.addLoadImageField(CacheImage.TYPE_HEEL, false, 0);
 //        data.setCheckFields(true);
         contentPanel.add(data);
-    
-
+        contentPanel.add(addLast);
+        addLast.addActionListener((ae) -> {
+            NewDataPanel tmp = new NewDataPanel("FASON_LINK", "HEEL", "AddBottomLink", 1);
+            listLast.add(tmp);
+            contentPanel.add(tmp);
+            pack();
+        });
         if (addProcessing) {
             processing();
         }
@@ -123,18 +130,33 @@ public class AddHeelForm extends SaveForm {
         if (!createNew) {
             String id = (String) sql.getObj("SELECT ID FROM LB_HEEL " + " where ART='" + art + "'");
             if (data.updateDB(id, null)) {
-                parentForm.fillTableHeel();
+                saveLinks();
+                parentForm.fillTable();
                 this.closeWindow();
             }
         } else if (data.saveToDB(data.generateID, extraFields)) {
+            saveLinks();
             if (parentForm != null) {
-                parentForm.fillTableHeel();
+                parentForm.fillTable();
             } else if (field != null) {
                 field.setText(data.getText(0));
             }
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void saveLinks() {
+
+        String[][] tmp = {
+            {"HEEL", data.getText(1)}
+        };
+
+        for (NewDataPanel tmpData : listLast) {
+            if (tmpData.checkFields()) {
+                tmpData.saveToDB("", tmp);
+            }
         }
     }
 

@@ -61,9 +61,8 @@ public class AddSoleForm extends SaveForm {
         contentPanel.add(addLast);
 
         addLast.addActionListener((ae) -> {
-            NewDataPanel tmp = new NewDataPanel("FASON_LINK", "SOLE", "AddHeelFormLink", 1);
+            NewDataPanel tmp = new NewDataPanel("FASON_LINK", "SOLE", "AddBottomLink", 1);
             listLast.add(tmp);
-            
             contentPanel.add(tmp);
             pack();
         });
@@ -126,18 +125,33 @@ public class AddSoleForm extends SaveForm {
         if (!createNew) {
             String id = (String) sql.getObj("SELECT ID FROM LB_SOLE " + " where ART='" + art + "'");
             if (data.updateDB(id, null)) {
-                parentForm.fillTableHeel();
+                saveLinks();
+                parentForm.fillTable();
                 this.closeWindow();
             }
         } else if (data.saveToDB(data.generateID, extraFields)) {
+            saveLinks();
             if (parentForm != null) {
-                parentForm.fillTableSole();
+                parentForm.fillTable();
             } else if (field != null) {
                 field.setText(data.getText(0));
             }
             this.closeWindow();
         } else {
             JOptionPane.showMessageDialog(this, "Заполните поля отмеченные красным", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void saveLinks() {
+
+        String[][] tmp = {
+            {"SOLE", data.getText(1)}
+        };
+
+        for (NewDataPanel tmpData : listLast) {
+            if (tmpData.checkFields()) {
+                tmpData.saveToDB("", tmp);
+            }
         }
     }
 
